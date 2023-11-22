@@ -8,7 +8,9 @@ murphy_household.add_room('Living Room', living_room_sensor)
 laura_bedroom_sensor = new Sensor('Living Room', 'Radiator')
 
 murphy_household.add_room('Lauras Bedroom', laura_bedroom_sensor)
-murphy_household.add_room('Kitchen', )
+
+kitchen_sensor = new Sensor('Kitchen', 'Radiator')
+murphy_household.add_room('Kitchen', kitchen_sensor)
 
 
 
