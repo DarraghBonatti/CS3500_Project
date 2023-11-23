@@ -1,18 +1,21 @@
-import project.py
+import unittest
+from household import (Household, Sensor, Room)
 
-murphy_household = new Household('Murphys House')
+class TestHousehold(unittest.TestCase):
+    def setUp(self):
+        self.murphy_household = Household('Murphys House')
+        self.living_room = Room('Living Room')
+        self.living_room_sensor = Sensor(self.living_room, 'Radiator')
 
-living_room_sensor = new Sensor('Living Room', 'Radiator')
-murphy_household.add_room('Living Room', living_room_sensor)
+    def test_add_room(self):
+        self.murphy_household.add_room('Living Room', self.living_room_sensor)
+        self.assertIn('Living Room', self.murphy_household.rooms)
 
-laura_bedroom_sensor = new Sensor('Living Room', 'Radiator')
+    def test_sensor_room(self):
+        self.assertEqual(self.living_room_sensor.room, self.living_room)
 
-murphy_household.add_room('Lauras Bedroom', laura_bedroom_sensor)
+    def test_sensor_type(self):
+        self.assertEqual(self.living_room_sensor.type, 'Radiator')
 
-kitchen_sensor = new Sensor('Kitchen', 'Radiator')
-murphy_household.add_room('Kitchen', kitchen_sensor)
-# hellllllo
-
-
-
-# living_room_sensor.setTemp()
+if __name__ == '__main__':
+    unittest.main()
