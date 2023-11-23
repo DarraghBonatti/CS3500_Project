@@ -8,15 +8,8 @@ class Temperature:
 
         self.__value = value
         self.__unit = unit
-
-        if self.__unit == 'Celsius':
-            self._celsius = self.__value
-            self._fahrenheit = self.__to_fahrenheit()
-        elif self.__unit == 'Fahrenheit':
-            self._fahrenheit = self.__value
-            self._celsius = self.__to_celsius()
-        else:
-            raise ValueError("Unsupported unit")
+        self.__celsius = self.__value
+        self.__fahrenheit = self.__value
   
     def __str__(self) -> str:
         return f"Temperature is {self.__value} degrees {self.__unit})"
@@ -38,22 +31,53 @@ class Temperature:
         self.__value = new_value
 
         if self.__unit == 'Celsius':
-            self._celsius = self.__value
-            self._fahrenheit = self.__to_fahrenheit()
+            self.__celsius = self.__value
+            self.__fahrenheit = self.__to_fahrenheit()
         elif self.__unit == 'Fahrenheit':
-            self._fahrenheit = self.__value
-            self._celsius = self.__to_celsius()
+            self.__fahrenheit = self.__value
+            self.__celsius = self.__to_celsius()
         else:
             raise ValueError("Unsupported unit")
 
         
     @property
     def _celsius(self) -> float:
-        return self._celsius
+        return self.__celsius
+    @_celsius.setter
+    def _celsius(self, new_celsius: float) -> None:
+        if not isinstance(new_celsius, float):
+            raise ValueError("Value must be a float")
+
+        self.__celsius = new_celsius
+
+        if self.__unit == 'Celsius':
+            self.__value = self.__celsius
+            self.__fahrenheit = self.__to_fahrenheit()
+        elif self.__unit == 'Fahrenheit':
+            self.__fahrenheit = self.__value
+            self.__celsius = self.__to_celsius()
+        else:
+            raise ValueError("Unsupported unit")
+    
     @property
     def _fahrenheit(self) -> float:
-        return self._fahrenheit
-    
+        return self.__fahrenheit
+    @_fahrenheit.setter
+    def _fahrenheit(self, new_fahrenheit: float) -> None:
+        if not isinstance(new_fahrenheit, float):
+            raise ValueError("Value must be a float")
+
+        self.__fahrenheit = new_fahrenheit
+
+        if self.__unit == 'Celsius':
+            self.__celsius = self.__value
+            self.__fahrenheit = self.__to_fahrenheit()
+        elif self.__unit == 'Fahrenheit':
+            self.__fahrenheit = self.__value
+            self.__celsius = self.__to_celsius()
+        else:
+            raise ValueError("Unsupported unit")
+
     @property
     def _unit(self) -> str:
         return self.__unit
@@ -74,9 +98,7 @@ class Temperature:
             self._fahrenheit = self.__value
             self._celsius = self.__to_celsius()
 
-        
-
-
+   
 class Sensor:
     def __init__(self, name: str, sensor_type: str = 'Radiator'):
         self.__name = name

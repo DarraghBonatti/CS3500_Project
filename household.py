@@ -31,15 +31,23 @@ class Household:
     def _rooms(self):
         return self.__rooms
 
-    def _add_room(self, name, sensor_type):
+    def _add_room(self, name_or_room: str or Room, sensor_or_sensor_type: str or Sensor):
         """
         Function adds a room to the household
-        Room is found in the rooms dictionary by it's name
+        Room is found in the rooms dictionary by its name
         Equally, this room has a sensor which is found in the sensors dictionary 
         by the room name
         """
-        self.__rooms[name] = Room(name, sensor_type)
-        self.__sensors[name] = self.rooms[name].sensor
+        if isinstance(name_or_room, str) and isinstance(sensor_or_sensor_type, str):
+            # Handle the case where name and sensor_type are provided
+            self.__rooms[name_or_room] = Room(name_or_room, sensor_or_sensor_type)
+            self.__sensors[name_or_room] = self.__rooms[name_or_room].sensor
+        elif isinstance(name_or_room, Room) and isinstance(sensor_or_sensor_type, Sensor):
+            # Handle the case where room and sensor are provided
+            self.__rooms[name_or_room._name] = name_or_room
+            self.__sensors[sensor_or_sensor_type._name] = sensor_or_sensor_type
+        else:
+            raise TypeError("Invalid parameters for _add_room method")
 
     def _get_room(self, room_name: str):
         return self.rooms[room_name]

@@ -21,6 +21,10 @@ class Room:
         return self.__sensor.__name
     
     @property
+    def sensor(self):
+        return self.__sensor
+    
+    @property
     def room_temperature(self):
         return self.__sensor.__temperature.value
     
