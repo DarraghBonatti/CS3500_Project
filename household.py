@@ -49,8 +49,8 @@ class Household:
         else:
             raise TypeError("Invalid parameters for _add_room method")
 
-    def _get_room(self, room_name: str):
-        return self.rooms[room_name]
+    def _get_room(self, room_name: str) -> Room:
+        return self.__rooms[room_name]
     
     # def _delete_room(self, room_name: str):
     #     del self.rooms[room_name]
