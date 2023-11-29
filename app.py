@@ -1,5 +1,3 @@
-
-
 import tkinter as tk
 from household import Household
 from tkinter import messagebox
