@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from household import Household
 from tkinter import messagebox
@@ -233,5 +232,9 @@ class App:
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(root)
+<<<<<<< HEAD
     root.mainloop()
    
+=======
+    root.mainloop() 
+>>>>>>> 36219659bc047c21b6c51bc95ec0bf2524cde992
