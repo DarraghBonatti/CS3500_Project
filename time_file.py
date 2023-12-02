@@ -22,7 +22,7 @@ def accelerate_time(current_time: datetime, acceleration_factor: int) -> datetim
 
 
 # Time_multiplier for temp function
-def time_multiplier(current_time: datetime, min_multiplier: float = 0.98, max_multiplier: float = 1.02) -> float:
+def time_multiplier(current_time: datetime, min_multiplier: float = 0.99, max_multiplier: float = 1.01) -> float:
     """
     Calculate a time multiplier based on the hour of the day using a sine function.
 
@@ -35,7 +35,9 @@ def time_multiplier(current_time: datetime, min_multiplier: float = 0.98, max_mu
         float: The calculated time multiplier.
     """
     hour = current_time.hour % 24
-    angle = ((hour + 6) % 12 - 6) / 6 * math.pi  # Adjust to create a sine curve for 1 AM to 12 AM
-    sine_multiplier = (math.sin(angle) + 1) / 2  # Map sine values to the range [0, 1]
-    
+    # Adjust to create a sine curve for 1 AM to 12 AM with a minimum at 1 AM
+    angle = ((hour + 8) % 12) / 6 * math.pi  
+    sine_multiplier = 0.5 * (math.sin(angle - math.pi/2) + 1)  # Map sine values to the range [0, 1]
+
     return min_multiplier + sine_multiplier * (max_multiplier - min_multiplier)
+

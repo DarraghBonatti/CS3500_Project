@@ -8,6 +8,9 @@ for test driven development
 """
 from sensor import Sensor 
 from room import Room 
+import datetime
+import random
+import time_file as tf
 
 
 class Household:
@@ -15,6 +18,7 @@ class Household:
         self.__name: str = name
         self.__rooms: {str: Room} = {}
         self.__sensors: {str:Sensor} = {}
+        self.__time: datetime = datetime.datetime.now()
 
     def __str__(self) -> str:
         return f"Household: {self.__name}, Rooms: {self.__rooms}"
@@ -26,6 +30,13 @@ class Household:
     @_name.setter
     def _name(self, new_name):
         self.__name = new_name
+
+    @property
+    def time(self):
+        return self.__time
+    @time.setter
+    def time(self, new_time: datetime):
+        self.__time = new_time
 
     @property
     def _rooms(self):
@@ -52,6 +63,24 @@ class Household:
     def _get_room(self, room_name: str) -> Room:
         return self.__rooms[room_name]
     
+    def init_rooms_temp(self):
+        """
+        Function initializes the temperature of each room in the household
+        """
+        
+        self.__time = datetime.datetime.now()
+        start_time = self.__time
+        for room in self.__rooms.values():
+            #  random temps between 18 and 23 celsius
+            start_temp = random.randint(18, 23)
+            room.sensor._temperature = round(float(start_temp), 2)
+
+            while self.__time < (start_time + datetime.timedelta(days=2)):
+                room.set_temp(room.generate_temps(self.__time, room.sensor._temperature))
+                print(f"Room: {room._name} \nCurrent Time: {self.__time.strftime('%Y-%m-%d %H:%M:%S')} \nRoom temperature: {room.room_temperature:.2f} \nRadiator: {room.radiator_setting}\n")
+                self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+
+
     # def _delete_room(self, room_name: str):
     #     del self.rooms[room_name]
     #     del self.sensors[room_name]

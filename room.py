@@ -11,7 +11,8 @@ class Room:
         
         self.__name = name
         self.__sensor = Sensor(name, sensor_type)
-        self.__desired_temperature = 0.0
+        self.__desired_temperature = 25.0
+        self.__radiator_setting = "Off"
 
     def __str__(self) -> str:
         return f"Room: {self.__name}, Sensor : {self.__sensor}"
@@ -27,6 +28,10 @@ class Room:
     @property
     def room_temperature(self):
         return self.__sensor._temperature
+    
+    @room_temperature.setter
+    def room_temperature(self, new_temp):
+        self.__sensor._temperature = new_temp
     
     @property
     def desired_temperature(self):
@@ -46,27 +51,51 @@ class Room:
             raise TypeError("Name must be a string")
         self.__name = new_name
 
+    @property
+    def radiator_setting(self):
+        return self.__radiator_setting
+    
     # implement generate_temps method
-    def _generate_temps(self, current_time, current_temp):
-        #  implement time multiplier on sine curve
-        new_temp = current_temp * tf.time_multiplier(current_time) 
-        # whereby time_multiplier is a function that returns a multiplier based on the time of day
-        #   and range of time_multiplier is 0.85 to 1.0
-        return new_temp
+    def generate_temps(self, current_time, current_temp):
+
+        base_rate = 0.05
+
+        rate = base_rate * tf.time_multiplier(current_time, 0.99, 1.01)
+
+        # Add the effect of the radiator
+        if self.__radiator_setting == "Low":
+            rate += 0.125  # Low setting boosts temperature at a lower rate
+        elif self.__radiator_setting == "High":
+            rate += 0.35  # High setting boosts temperature at a higher rate
+
+        if current_time.hour >= 6 and current_time.hour < 18:
+            # daytime
+            new_temp = current_temp + rate
+        else:
+            # nighttime
+            new_temp = current_temp - rate
+
+        rounded_temp = round(new_temp, 2)
+        return rounded_temp
     
 
-    def init_generate_temps(self, start_time: datetime, start_temp: float):
-        # for 5 accelerated days
-        #   set room temp to generate_temps(current_time, current_temp)
-        current_time = start_time
-        current_temp = start_temp
+    def set_temp(self, new_temp: float):
+        if self.__desired_temperature != new_temp:
+            print(f"New temp = {new_temp}")
+            delta_temp = abs(self.__desired_temperature - new_temp)
 
-        while current_time < (start_time + datetime.timedelta(days=5)):
-            current_temp = self._generate_temps(current_time, current_temp)
-            print(f"Current Time: {current_time}, Room temperature: {current_temp}")
-            current_time = tf.accelerate_time(current_time, acceleration_factor=10000)  # Assuming 300x acceleration
+            if delta_temp >= 1:
+                self.turn_radiator_on(delta_temp)
+            elif abs(self.__sensor._temperature - self.__desired_temperature) < 1:
+                self.__radiator_setting = "Off"
+                print(f"Radiator is now set to {self.__radiator_setting}.")
 
-    def set_temp(self, new_temp):
-        if self.desired_temperature != new_temp:
-            delta_temp = self.desired_temperature - new_temp
-            # self.turn_radiator_on(delta_temp)
+        self.__sensor._temperature = round(new_temp, 2)
+
+
+    def turn_radiator_on(self, delta_temp):
+        if delta_temp < 4:
+            self.__radiator_setting = "Low"
+        else:
+            self.__radiator_setting = "High"
+        print(f"Radiator is now set to {self.__radiator_setting}.")

@@ -111,7 +111,6 @@ class Sensor:
     @property
     def _temperature(self):
         return self.__temperature.value
-    
     @_temperature.setter
     def _temperature(self, new_temp):
         # Don't need to check if it's a float, as the Temperature class will do that
