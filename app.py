@@ -100,6 +100,16 @@ class App:
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
 
+    def delete_room(self):
+        current_index = self.notebook.index(self.notebook.select())
+        if current_index >= 0:
+            #room_name = self.rooms[current_index][0]
+            del self.rooms[current_index]
+            #self.household._remove_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
+
+            # Remove the selected tab
+            self.notebook.forget(current_index)
+
     def show_results(self):
 
         widgets = root.winfo_children()
@@ -162,8 +172,9 @@ class App:
 
     # + button to add a new room
         add_button = tk.Button(self.master, text="+ Add Room", command=self.add_new_room)
-         
         add_button.pack(pady=10)
+        delete_button = tk.Button(self.master, text="- Delete Room", command=self.delete_room)
+        delete_button.pack(pady=10)
 
 
 
