@@ -224,15 +224,17 @@ class App:
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room_name: self.update_counter(room, 1))
-            plus_button.pack(side=tk.LEFT, padx=5)
+            plus_button.pack(pady=5)
 
             # Counter label
             counter_label = tk.Label(room_frame, textvariable=counter_value)
-            counter_label.pack(side=tk.LEFT, padx=5)
+            counter_label.pack(pady=5)
 
             # Minus button
             minus_button = tk.Button(room_frame, text="-", command=lambda room=room_name: self.update_counter(room, -1))
-            minus_button.pack(side=tk.LEFT, padx=5)
+            #minus_button.pack(side=tk.LEFT, padx=5)
+            minus_button.pack(pady=5)
+            
 
             self.notebook.add(room_frame, text=f"{room_name}")
             self.notebook.pack(pady=10)
