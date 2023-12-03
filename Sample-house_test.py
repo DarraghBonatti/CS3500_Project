@@ -39,7 +39,7 @@ class TestHousehold(unittest.TestCase):
 
     def test_generate_temps(self):
         household = Household("Household")
-        household._add_room("Test Room", "Radiator")
+        household.add_room("Test Room", "Radiator")
 
         # Replace these with your desired start time and temperature
 
@@ -48,8 +48,8 @@ class TestHousehold(unittest.TestCase):
         custom_datetime = datetime.combine(today_date, desired_time)
   
         desired_temp = 30.0
-        household._get_room("Test Room").schedule_desired_temp(desired_temp, custom_datetime)
-        print(f"Scheduled desired temp {household._get_room('Test Room').scheduled_desired_temp}, Scheduled Time: {household._get_room('Test Room').schedule_start}")
+        household.get_room("Test Room").schedule_desired_temp(desired_temp, custom_datetime)
+        print(f"Scheduled desired temp {household.get_room('Test Room').scheduled_desired_temp}, Scheduled Time: {household.get_room('Test Room').schedule_start}")
 
         household.init_rooms_temp()
 

@@ -20,30 +20,32 @@ class Household:
         self.__rooms: {str: Room} = {}
         self.__sensors: {str:Sensor} = {}
         self.__time: datetime = datetime.datetime.now()
+        self.__temps = []
 
     def __str__(self) -> str:
         return f"Household: {self.__name}, Rooms: {self.__rooms}"
     
     @property
-    def _name(self):
+    def name(self):
         return self.__name
     
-    @_name.setter
-    def _name(self, new_name):
+    @name.setter
+    def name(self, new_name):
         self.__name = new_name
 
     @property
     def time(self):
         return self.__time.strftime('%Y-%m-%d %H:%M:%S')
+
     @time.setter
     def time(self, new_time: datetime):
         self.__time = new_time
 
     @property
-    def _rooms(self):
+    def rooms(self):
         return self.__rooms
 
-    def _add_room(self, name_or_room: str or Room, sensor_or_sensor_type: str or Sensor):
+    def add_room(self, name_or_room: str or Room, sensor_or_sensor_type: str or Sensor):
         """
         Function adds a room to the household
         Room is found in the rooms dictionary by its name
@@ -56,12 +58,12 @@ class Household:
             self.__sensors[name_or_room] = self.__rooms[name_or_room].sensor
         elif isinstance(name_or_room, Room) and isinstance(sensor_or_sensor_type, Sensor):
             # Handle the case where room and sensor are provided
-            self.__rooms[name_or_room._name] = name_or_room
-            self.__sensors[sensor_or_sensor_type._name] = sensor_or_sensor_type
+            self.__rooms[name_or_room.name] = name_or_room
+            self.__sensors[sensor_or_sensor_type.name] = sensor_or_sensor_type
         else:
             raise TypeError("Invalid parameters for _add_room method")
     
-    def _get_room(self, room_name: str) -> Room:
+    def get_room(self, room_name: str) -> Room:
         return self.__rooms[room_name]
     
     # def init_rooms_temp(self):
@@ -82,22 +84,20 @@ class Household:
     #             self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
     #             time.sleep(2)
 
-
     def init_rooms_temp(self):
         self.__time = datetime.datetime.now()
         start_time = self.__time
-        self.temps = []  # Initialize the list
         for room in self.__rooms.values():
             #  random temps between 18 and 23 celsius
             start_temp = random.randint(18, 23)
-            room.sensor._temperature = round(float(start_temp), 2)
+            room.sensor.temperature = round(float(start_temp), 2)
             while self.__time < (start_time + datetime.timedelta(days=2)):
-                room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
+                room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
                 # Store the temperatures in the list
-                self.temps.append((
+                self.__temps.append((
                     self.__time.strftime('%Y-%m-%d %H:%M:%S'),
                     {
-                        'room': room._name,
+                        'room': room.name,
                         'room_temperature': room.room_temperature,
                         'desired_temperature': room.desired_temperature,
                         'scheduled_temperature': room.scheduled_desired_temp,
@@ -106,7 +106,6 @@ class Household:
                     }
                 ))
                 self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-            
 
     # def init_boiler_temp(self):
     #     """
@@ -118,8 +117,6 @@ class Household:
     #     while self.__time < (start_time + datetime.timedelta(days=2)):
     #         print(f"Boiler temperature: {boiler_temp}")
     #         self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-            
-
 
     def delete_room(self, room_name: str):
         if room_name not in self.__rooms.keys():

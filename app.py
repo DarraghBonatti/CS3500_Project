@@ -87,7 +87,7 @@ class App:
         sensor_type = self.sensor_type_var.get()
 
         if room_name and sensor_type:
-            self.household._add_room(room_name, sensor_type)
+            self.household.add_room(room_name, sensor_type)
             self.rooms.append((room_name, sensor_type))
             self.room_count += 1
 
@@ -211,7 +211,7 @@ class App:
 
         if room_name and sensor_type:
             new_room_window.destroy()
-            self.household._add_room(room_name, sensor_type)
+            self.household.add_room(room_name, sensor_type)
             self.rooms.append((room_name, sensor_type))
             self.room_count += 1
 
