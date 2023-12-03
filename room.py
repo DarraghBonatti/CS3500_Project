@@ -1,6 +1,6 @@
 from sensor import Sensor
 import time_file as tf
-import datetime
+# import datetime
 
 class Room: 
     def __init__(self, name, sensor_type: str = 'Radiator'):
@@ -99,3 +99,11 @@ class Room:
         else:
             self.__radiator_setting = "High"
         print(f"Radiator is now set to {self.__radiator_setting}.")
+
+    def schedule_desired_temp(self, desired_temp: float, start_time: str):
+        if not isinstance(desired_temp, float):
+            raise TypeError("Desired temperature must be a float")
+        if not isinstance(start_time, str):
+            raise TypeError("Start time must be a string")
+        self.__desired_temperature = desired_temp
+        self.__start_time = start_time

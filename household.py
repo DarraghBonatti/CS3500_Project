@@ -81,6 +81,6 @@ class Household:
                 self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
 
 
-    # def _delete_room(self, room_name: str):
-    #     del self.rooms[room_name]
-    #     del self.sensors[room_name]
+    def _delete_room(self, room_name: str):
+        del self.__sensors[room_name]
+        del self.__rooms[room_name]
