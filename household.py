@@ -81,7 +81,7 @@ class Household:
                 self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
 
 
-    def _delete_room(self, room_name: str):
+    def delete_room(self, room_name: str):
         if room_name not in self.__rooms.keys():
             raise ValueError("Room does not exist")
         del self.__sensors[room_name]
