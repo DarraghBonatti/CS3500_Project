@@ -1,6 +1,6 @@
 import unittest
 from household import (Household, Sensor, Room)
-import datetime
+from datetime import datetime, time
 
 class TestHousehold(unittest.TestCase):
     # def setUp(self):
@@ -42,9 +42,18 @@ class TestHousehold(unittest.TestCase):
         household._add_room("Test Room", "Radiator")
 
         # Replace these with your desired start time and temperature
-        start_temp = 20.0
+
+        today_date = datetime.now().date()
+        desired_time = time(22, 0)
+        custom_datetime = datetime.combine(today_date, desired_time)
+  
+        desired_temp = 30.0
+        household._get_room("Test Room").schedule_desired_temp(desired_temp, custom_datetime)
+        print(f"Scheduled desired temp {household._get_room('Test Room').scheduled_desired_temp}, Scheduled Time: {household._get_room('Test Room').schedule_start}")
 
         household.init_rooms_temp()
+
+
         # Add assertions to check if temperatures are generated correctly
 
 

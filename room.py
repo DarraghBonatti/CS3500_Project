@@ -59,6 +59,18 @@ class Room:
     def radiator_setting(self):
         return self.__radiator_setting
     
+    @property
+    def scheduler_active(self):
+        return self.__scheduler_active
+    
+    @property
+    def scheduled_desired_temp(self):
+        return self.__scheduled_desired_temp
+
+    @property
+    def schedule_start(self):
+        return self.__schedule_start
+
     # implement generate_temps method
     def generate_temps(self, current_temp, current_time: datetime = None):
         self.__current_time = current_time
@@ -112,11 +124,7 @@ class Room:
             self.__radiator_setting = "High"
         print(f"Radiator is now set to {self.__radiator_setting}.")
 
-    def schedule_desired_temp(self, desired_temp: float, start_time: str):
-        if not isinstance(desired_temp, float):
-            raise TypeError("Desired temperature must be a float")
-        if not isinstance(start_time, str):
-            raise TypeError("Start time must be a string")
+    def schedule_desired_temp(self, desired_temp: float, start_time: datetime):
         self.__scheduler_active = True
         self.__scheduled_desired_temp = desired_temp
         self.__schedule_start = start_time
