@@ -1,6 +1,6 @@
 from sensor import Sensor
 import time_file as tf
-# import datetime
+import datetime
 
 class Room: 
     def __init__(self, name, sensor_type: str = 'Radiator'):
@@ -13,6 +13,10 @@ class Room:
         self.__sensor = Sensor(name, sensor_type)
         self.__desired_temperature = 25.0
         self.__radiator_setting = "Off"
+        self.__scheduler_active = False
+        self.__scheduled_desired_temp = None
+        self.__schedule_start = None
+        self.__current_time = None
 
     def __str__(self) -> str:
         return f"Room: {self.__name}, Sensor : {self.__sensor}"
@@ -56,11 +60,12 @@ class Room:
         return self.__radiator_setting
     
     # implement generate_temps method
-    def generate_temps(self, current_time, current_temp):
+    def generate_temps(self, current_temp, current_time: datetime = None):
+        self.__current_time = current_time
 
         base_rate = 0.05
 
-        rate = base_rate * tf.time_multiplier(current_time, 0.99, 1.01)
+        rate = base_rate * tf.time_multiplier(self.__current_time, 0.99, 1.01)
 
         # Add the effect of the radiator
         if self.__radiator_setting == "Low":
@@ -68,7 +73,7 @@ class Room:
         elif self.__radiator_setting == "High":
             rate += 0.35  # High setting boosts temperature at a higher rate
 
-        if current_time.hour >= 6 and current_time.hour < 18:
+        if self.__current_time.hour >= 6 and self.__current_time.hour < 18:
             # daytime
             new_temp = current_temp + rate
         else:
@@ -80,8 +85,15 @@ class Room:
     
 
     def set_temp(self, new_temp: float):
+        if not isinstance(new_temp, float):
+            raise TypeError("New temperature must be a float")
+        
+        if self.__current_time:
+            if self.__scheduler_active and self.__schedule_start <= self.__current_time:
+                self.__desired_temperature = self.__scheduled_desired_temp
+                self.__scheduler_active = False
+
         if self.__desired_temperature != new_temp:
-            print(f"New temp = {new_temp}")
             delta_temp = abs(self.__desired_temperature - new_temp)
 
             if delta_temp >= 1:
@@ -105,5 +117,11 @@ class Room:
             raise TypeError("Desired temperature must be a float")
         if not isinstance(start_time, str):
             raise TypeError("Start time must be a string")
-        self.__desired_temperature = desired_temp
-        self.__start_time = start_time
+        self.__scheduler_active = True
+        self.__scheduled_desired_temp = desired_temp
+        self.__schedule_start = start_time
+
+    def cancel_schedule(self):
+        self.__scheduler_active = False
+        self.__scheduled_desired_temp = None
+        self.__schedule_start = None
