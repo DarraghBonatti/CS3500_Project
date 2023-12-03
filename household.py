@@ -82,5 +82,7 @@ class Household:
 
 
     def _delete_room(self, room_name: str):
+        if room_name not in self.__rooms.keys():
+            raise ValueError("Room does not exist")
         del self.__sensors[room_name]
         del self.__rooms[room_name]
