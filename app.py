@@ -71,15 +71,15 @@ class App:
     def get_room_count(self):
         try:
             self.total_rooms = int(self.room_count_entry.get())
-            if self.total_rooms > 0:
+            if self.total_rooms > 0 and self.total_rooms <9 :
                 self.label.config(text="Enter Room Information:")
                 self.room_count_entry.destroy()
                 self.submit_rooms_button.destroy()
                 self.create_individual_room_widgets()
             else:
-                messagebox.showerror("Error", "Please enter a valid number of rooms.")
+                messagebox.showerror("Error", "Please enter a valid number of rooms between 1-8.")
         except ValueError:
-            messagebox.showerror("Error", "Please enter a valid number.")
+            messagebox.showerror("Error", "Please enter a valid number .")
 
     def create_individual_room_widgets(self):
         self.room_name_label = tk.Label(self.master, text="Room Name:")
