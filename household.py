@@ -18,7 +18,7 @@ class Household:
     def __init__(self, name):
         self.__name: str = name
         self.__rooms: {str: Room} = {}
-        self.__sensors: {str:Sensor} = {}
+        self.__sensors: {str: Sensor} = {}
         self.__time: datetime = datetime.datetime.now()
         self._temps = []
 
@@ -87,7 +87,6 @@ class Household:
     def init_rooms_temp(self):
         self.__time = datetime.datetime.now()
         start_time = self.__time
-        self.temps = []  # Initialize the list
 
         while self.__time < (start_time + datetime.timedelta(days=2)):
             for room in self.__rooms.values():
