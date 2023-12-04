@@ -87,7 +87,6 @@ class Household:
     def init_rooms_temp(self):
         self.__time = datetime.datetime.now()
         start_time = self.__time
-        
 
         while self.__time < (start_time + datetime.timedelta(days=2)):
             for room in self.__rooms.values():
@@ -107,11 +106,8 @@ class Household:
                     }
                 ))
             self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-<<<<<<< HEAD
-
-=======
         print(self._temps)
->>>>>>> 0d3eff391e7f694f5b5dec4e798caf672c9a2896
+
     # def init_boiler_temp(self):
     #     """
     #     Function initializes the temperature of the boiler
