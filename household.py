@@ -87,11 +87,11 @@ class Household:
         self.__time = datetime.datetime.now()
         start_time = self.__time
         self.temps = []  # Initialize the list
-        for room in self.__rooms.values():
-            #  random temps between 18 and 23 celsius
-            start_temp = random.randint(18, 23)
-            room.sensor._temperature = round(float(start_temp), 2)
-            while self.__time < (start_time + datetime.timedelta(days=2)):
+
+        while self.__time < (start_time + datetime.timedelta(days=2)):
+            for room in self.__rooms.values():
+                start_temp = random.randint(18, 23)
+                room.sensor._temperature = round(float(start_temp), 2)
                 room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
                 # Store the temperatures in the list
                 self.temps.append((
@@ -104,8 +104,9 @@ class Household:
                         'schedule_start': room.schedule_start,
                         'radiator_setting': room.radiator_setting
                     }
-                ))
-                self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+            ))
+            self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+       
             
 
     # def init_boiler_temp(self):
