@@ -20,7 +20,6 @@ class Household:
         self.__rooms: {str: Room} = {}
         self.__sensors: {str: Sensor} = {}
         self.__time: datetime = datetime.datetime.now()
-        self.__temps = []
 
     def __str__(self) -> str:
         return f"Household: {self.__name}, Rooms: {self.__rooms}"
@@ -66,29 +65,38 @@ class Household:
     def get_room(self, room_name: str) -> Room:
         return self.__rooms[room_name]
 
-    def init_rooms_temp(self):
-        self.__time = datetime.datetime.now()
-        start_time = self.__time
+    # def init_rooms_temp(self):
+    #     self.__time = datetime.datetime.now()
+    #     start_time = self.__time
+    #
+    #     while self.__time < (start_time + datetime.timedelta(days=2.0)):
+    #         # Initialize an empty list to store room data for the current time
+    #         room_data = []
+    #         for room in self.__rooms.values():
+    #             start_temp = random.randint(18, 23)
+    #             room.sensor._temperature = round(float(start_temp), 2)
+    #             room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
+    #             # Append the room data to the list
+    #             room_data.append({
+    #                 'room': room.name,
+    #                 'room_temperature': room.room_temperature,
+    #                 'desired_temperature': room.desired_temperature,
+    #                 'scheduled_temperature': room.scheduled_desired_temp,
+    #                 'schedule_start': room.schedule_start,
+    #                 'radiator_setting': room.radiator_setting
+    #             })
+    #         # Append the time and room data as a tuple to the temperatures list
+    #         self.__temps.append((self.__time.strftime('%Y-%m-%d %H:%M:%S'), room_data))
+    #         self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+    #     print(self.__temps)
 
-        while self.__time < (start_time + datetime.timedelta(days=2.0)):
-            for room in self.__rooms.values():
-                start_temp = random.randint(18, 23)
-                room.sensor._temperature = round(float(start_temp), 2)
-                room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
-                # Store the temperatures in the list
-                self.__temps.append((
-                    self.__time.strftime('%Y-%m-%d %H:%M:%S'),
-                    {
-                        'room': room.name,
-                        'room_temperature': room.room_temperature,
-                        'desired_temperature': room.desired_temperature,
-                        'scheduled_temperature': room.scheduled_desired_temp,
-                        'schedule_start': room.schedule_start,
-                        'radiator_setting': room.radiator_setting
-                    }
-                ))
-            self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-        print(self.__temps)
+    def update_rooms_temp(self):
+        for room in self.__rooms.values():
+            start_temp = random.randint(18, 23)
+            room.sensor._temperature = round(float(start_temp), 2)
+            room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
+        self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+
 
     # def init_boiler_temp(self):
     #     """

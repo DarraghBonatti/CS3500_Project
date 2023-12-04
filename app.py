@@ -174,6 +174,11 @@ class App:
         
     def updateTemp(self):
 
+        self.household.update_rooms_temp()
+
+
+
+
     # def add_to_tabs(self):
     #     print(self.frames)
     #     for frame in self.frames:
