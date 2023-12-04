@@ -1,31 +1,37 @@
 import tkinter as tk
 from household import Household
 from tkinter import messagebox
-from tkinter import ttk, messagebox
+from tkinter import ttk
 
 
 class App:
     def __init__(self, master):
         self.master = master
         self.master.title("Room Sensor Input")
+        self.master.configure(bg="#66AC91")
 
         self.room_count = 0
         self.total_rooms = 0
         self.rooms = []
         self.counters = {}
+        self.temperature_vars = {}
 
         self.create_widgets()
 
     def create_widgets(self):
+        
         self.label = tk.Label(self.master, text="Enter your family name:")
         self.label.pack(pady=10)
+        self.label.configure(highlightbackground="#66AC91")
 
         self.family_name_entry = tk.Entry(self.master)
         self.family_name_entry.pack()
+        self.family_name_entry.configure(highlightbackground="#66AC91")
 
         self.submit_family_button = tk.Button(self.master, text="Submit", command=self.get_family_name)
         self.submit_family_button.pack(pady=10)
-
+        self.submit_family_button.configure(highlightbackground="#66AC91")
+        
     def get_family_name(self):
         self.family_name = self.family_name_entry.get()
         if self.family_name:
@@ -96,19 +102,36 @@ class App:
                 self.sensor_type_var.set("Radiator")
             else:
                 self.show_results()
+                #print("Printing init room temps")
+                self.household.init_rooms_temp()
+            
 
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
 
+  
+    def update_temperature_labels(self):
+        for room_name in self.rooms:
+            current_temp = self.household._get_room(room_name[0])
+            temp_to_show = current_temp.room_temperature
+            #print("temperature vars")
+            self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
+            #print("after method")
+            self.master.after(8000, self.update_temperature_labels)
+
+
     def delete_room(self):
         current_index = self.notebook.index(self.notebook.select())
         if current_index >= 0:
-            #room_name = self.rooms[current_index][0]
+            room_name = self.rooms[current_index][0]
             del self.rooms[current_index]
-            #self.household._remove_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
+            self.household._delete_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
 
             # Remove the selected tab
             self.notebook.forget(current_index)
+            rooms_value = self.household._rooms
+            for i in rooms_value:
+                print(i)
 
     def show_results(self):
 
@@ -125,6 +148,7 @@ class App:
         result_text = "Room Information:\n"
         for room in self.rooms:
             result_text += f"{room[0]} - Sensor Type: {room[1]}\n"
+            
            
 
         result_label = tk.Label(self.master, text=result_text)
@@ -138,16 +162,23 @@ class App:
             label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
             label1.pack(pady=10)
 
+            # tab_style_name = f"Tab.{room[0]}"
+            # self.notebook.style = ttk.Style()
+            # self.notebook.style.configure(tab_style_name, background="#FFBDB2")
+            # tab_tag_name = f"Tab.{room[0]}"
+            # self.notebook.tk.call(self.notebook._w, "addtag", tab_tag_name, "withtag", self.notebook.tabs()[-1])
+
+            # # Configure the tag to set the background color
+            # self.notebook.tk.call(self.notebook._w, "tag", "configure", tab_tag_name, background="#FFFF00")
+
+
             counter_value = tk.IntVar(value=0)
             self.counters[room[0]] = counter_value
-            ###### no initalised current value for rooms
-            # current_temp = self.household._get_room(room[0])
-            # temp_to_show = current_temp.room_temperature
-            temptext = "Current Temperature is 18 degrees Celsius"
 
-            currentTemp_label = tk.Label(room_frame, textvariable=temptext)
-            currentTemp_label.pack(side=tk.LEFT, padx=5)
-
+            temperature_var = tk.StringVar(value="N/A")
+            self.temperature_vars[room[0]] = temperature_var
+            temperature_label = tk.Label(room_frame, textvariable=temperature_var)
+            temperature_label.pack(pady=5)
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room[0]: self.update_counter(room, 1))
@@ -167,6 +198,7 @@ class App:
             #self.notebook.add(room_frame, text=f"{room[0]}")
 
         self.notebook.pack(pady=10)
+        self.update_temperature_labels()
 
          # ... existing code ...
 
