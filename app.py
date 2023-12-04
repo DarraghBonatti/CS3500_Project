@@ -31,7 +31,6 @@ class App:
         
         self.create_widgets()
 
-
     def create_widgets(self):
         
         self.label = tk.Label(self.master, text="Enter your family name:")
@@ -128,7 +127,6 @@ class App:
             else:
                 
                 self.show_results()
-            
 
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
@@ -137,9 +135,7 @@ class App:
         if room in self.household.rooms:
             self.household.rooms[room].desired_temperature += 1
         print(self.household.rooms[room].desired_temperature)
-         
 
-  
     def update_temperature_labels(self):
         for room_name in self.rooms:
             current_temp = self.household.get_room(room_name[0])
@@ -148,7 +144,6 @@ class App:
             self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
             #print("after method")
             self.master.after(8000, self.update_temperature_labels)
-
 
     def delete_room(self):
         current_index = self.notebook.index(self.notebook.select())
@@ -178,14 +173,12 @@ class App:
         self.time = self.household.time
         self.time_label.config(text=self.time)
 
-        
     def updateTemp(self):
 
         self.household.update_rooms_temp()
         self.updateTempsLabels()
         self.updateTimeLabel()
         self.master.after(5000, self.updateTemp)
-        
 
     def add_to_tabs(self):
         for frame in self.frames:
@@ -206,12 +199,7 @@ class App:
             print(self.labels[counter])
             updateLabel = self.labels[counter]
             updateLabel.config(text=tempText)
-        
-             
 
-    
-
-    
     def show_results(self):
 
         widgets = root.winfo_children()
