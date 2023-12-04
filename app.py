@@ -22,6 +22,10 @@ class App:
         self.desiredtempCounter = 0
         self.labels = {}
         self.frames = []
+        self.time = 0
+        self.roooms = []
+        self.labels = []
+        self.labels2 = []
         
 
         
@@ -114,6 +118,7 @@ class App:
 
         if room_name and sensor_type:
             self.household.add_room(room_name, sensor_type)
+            self.roooms.append(self.household.get_room(room_name))
             self.rooms.append((room_name, sensor_type))
             self.room_count += 1
 
@@ -122,7 +127,6 @@ class App:
                 self.sensor_type_var.set("Radiator")
             else:
                 
-                self.household.init_rooms_temp()
                 self.show_results()
             
 
@@ -133,8 +137,7 @@ class App:
         if room in self.household.rooms:
             self.household.rooms[room].desired_temperature += 1
         print(self.household.rooms[room].desired_temperature)
-       
-        
+         
 
   
     def update_temperature_labels(self):
@@ -160,36 +163,50 @@ class App:
             for i in rooms_value:
                 print(i)
 
-    def update_time(self):
-        if self.counter < len(self.household.temps):
-           # print(self.counter)
+    # def update_time(self):
+    #     if self.counter < len(self.household.temps):
+    #        # print(self.counter)
        
-            #current_time = self.household.time  # Get time from household object
-            self.current_time  = self.household.temps[self.counter][0]
-            print(self.current_time)
-            self.time_label.config(text=self.current_time)
-            self.counter+=self.room_count
+    #         #current_time = self.household.time  # Get time from household object
+    #         self.current_time  = self.household.temps[self.counter][0]
+    #         print(self.current_time)
+    #         self.time_label.config(text=self.current_time)
+    #         self.counter+=self.room_count
             
-            self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
+    #         self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
+    def updateTimeLabel(self):
+        self.time = self.household.time
+        self.time_label.config(text=self.time)
+
         
     def updateTemp(self):
 
         self.household.update_rooms_temp()
+        self.updateTempsLabels()
+        self.updateTimeLabel()
+        self.master.after(5000, self.updateTemp)
+        
 
+    def add_to_tabs(self):
+        for frame in self.frames:
+            Label = tk.Label(frame, text="")
+            self.labels.append(Label)
+            Label.pack()
 
+    def add_to_tabs2(self):
+            for frame in self.frames:
+                Label = tk.Label(frame, text="")
+                self.labels.append(Label)
+                Label.pack()
 
-
-    # def add_to_tabs(self):
-    #     print(self.frames)
-    #     for frame in self.frames:
-    #         label = tk.Label(frame, text="")
-    #         label.pack()
-
-    # def updateTemps(self):
-    #      for frame in self.frames:
-    #         self.NumOfRooms = len(self.frames)
-    #         self.temptext = 
-    #         frame.config(text=temptext)
+    def updateTempsLabels(self):
+        for counter , frame in enumerate(self.frames):
+            roomToDisplay = self.roooms[counter]
+            tempText = roomToDisplay.room_temperature
+            print(self.labels[counter])
+            updateLabel = self.labels[counter]
+            updateLabel.config(text=tempText)
+        
              
 
     
@@ -228,7 +245,7 @@ class App:
             
            
             
-            counter_value = tk.IntVar(value=0)
+            counter_value = tk.IntVar(value=25)
             self.counters[room[0]] = counter_value
 
             # Plus button
@@ -262,8 +279,11 @@ class App:
         self.time_label = tk.Label(root, text="", font=('Helvetica', 24))
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
-        self.update_time()  # Initial call to update time
+        # self.update_time()  # Initial call to update time
         self.add_to_tabs()
+        # self.updateTemp()
+        self.updateTemp()
+        self.add_to_tabs2()
         
 
 

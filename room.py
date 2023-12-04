@@ -30,6 +30,10 @@ class Room:
     def sensor(self):
         return self.__sensor
     
+    @property
+    def sensor_type(self):
+        return self.__sensor.type
+    
     # def set_desired_temperature(self, new_temperature):
     #     # Additional validation if needed
     #     if not isinstance(new_temperature, (int, float)):
