@@ -107,7 +107,7 @@ class Household:
                     }
                 ))
                 self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-
+        print(self._temps)
     # def init_boiler_temp(self):
     #     """
     #     Function initializes the temperature of the boiler
