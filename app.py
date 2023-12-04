@@ -1,5 +1,6 @@
 import tkinter as tk
 from household import Household
+from room import Room
 from tkinter import messagebox
 from tkinter import ttk
 
@@ -15,8 +16,13 @@ class App:
         self.rooms = []
         self.counters = {}
         self.temperature_vars = {}
+        self.counter = 0
+        self.tempCounter = 0
+        self.desiredtempCounter = 0
 
+        
         self.create_widgets()
+
 
     def create_widgets(self):
         
@@ -46,9 +52,11 @@ class App:
     def create_room_widgets(self):
         self.room_count_entry = tk.Entry(self.master)
         self.room_count_entry.pack()
+        self.room_count_entry.configure(highlightbackground="#66AC91")
 
         self.submit_rooms_button = tk.Button(self.master, text="Submit", command=self.get_room_count)
         self.submit_rooms_button.pack(pady=10)
+        self.submit_rooms_button.configure(highlightbackground="#66AC91")
 
     def get_room_count(self):
         try:
@@ -66,27 +74,34 @@ class App:
     def create_individual_room_widgets(self):
         self.room_name_label = tk.Label(self.master, text="Room Name:")
         self.room_name_label.pack()
+        self.room_name_label.configure(highlightbackground="#66AC91")
 
         self.room_name_entry = tk.Entry(self.master)
         self.room_name_entry.pack()
+        self.room_name_entry.configure(highlightbackground="#66AC91")
 
         self.sensor_type_var = tk.StringVar()
         self.sensor_type_var.set("Radiator")
 
         self.radio_frame = tk.Frame(self.master)
         self.radio_frame.pack()
+        self.radio_frame.configure(highlightbackground="#66AC91")
 
         self.radiator_radio = tk.Radiobutton(self.radio_frame, text="Radiator", variable=self.sensor_type_var, value="Radiator")
         self.radiator_radio.pack(side=tk.LEFT)
+        self.radiator_radio.configure(highlightbackground="#66AC91")
 
         self.boiler_radio = tk.Radiobutton(self.radio_frame, text="Boiler", variable=self.sensor_type_var, value="Boiler")
         self.boiler_radio.pack(side=tk.LEFT)
+        self.boiler_radio.configure(highlightbackground="#66AC91")
 
         self.submit_button = tk.Button(self.master, text="Submit", command=self.submit_room)
         self.submit_button.pack(pady=10)
+        self.submit_button.configure(highlightbackground="#66AC91")
 
         self.finish_button = tk.Button(self.master, text="Finish", command=self.master.quit)
         self.finish_button.pack()
+        self.finish_button.configure(highlightbackground="#66AC91")
 
     def submit_room(self):
         room_name = self.room_name_entry.get()
@@ -101,18 +116,25 @@ class App:
                 self.room_name_entry.delete(0, tk.END)
                 self.sensor_type_var.set("Radiator")
             else:
-                self.show_results()
-                #print("Printing init room temps")
+                
                 self.household.init_rooms_temp()
+                self.show_results()
             
 
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
+        # self.desiredtempCounter += value
+        # self.desiredtempCounter = float(self.desiredtempCounter)
+        if room in self.household.rooms:
+            self.household.rooms[room].desired_temperature += 1
+        print(self.household.rooms[room].desired_temperature)
+       
+        
 
   
     def update_temperature_labels(self):
         for room_name in self.rooms:
-            current_temp = self.household._get_room(room_name[0])
+            current_temp = self.household.get_room(room_name[0])
             temp_to_show = current_temp.room_temperature
             #print("temperature vars")
             self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
@@ -125,13 +147,35 @@ class App:
         if current_index >= 0:
             room_name = self.rooms[current_index][0]
             del self.rooms[current_index]
-            self.household._delete_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
+            self.household.delete_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
 
             # Remove the selected tab
             self.notebook.forget(current_index)
             rooms_value = self.household._rooms
             for i in rooms_value:
                 print(i)
+
+    def update_time(self):
+        if self.counter < len(self.household._temps):
+           # print(self.counter)
+       
+            #current_time = self.household.time  # Get time from household object
+            self.current_time  = self.household._temps[self.counter][0]
+            #print(self.current_time)
+            self.time_label.config(text=self.current_time)
+            self.counter+=1
+            
+            self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
+        
+
+    def update_temp(self):
+            if self.tempCounter<len(self.household._temps):
+                self.room_temperature = self.household._temps[self.tempCounter][1]['room_temperature']
+                print(self.room_temperature)
+                self.tempCounter += 1
+                self.temp_label.config(text=self.room_temperature)
+                self.master.after(1000, self.update_temp)
+
 
     def show_results(self):
 
@@ -161,24 +205,21 @@ class App:
             label.pack(pady=10)
             label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
             label1.pack(pady=10)
-
-            # tab_style_name = f"Tab.{room[0]}"
-            # self.notebook.style = ttk.Style()
-            # self.notebook.style.configure(tab_style_name, background="#FFBDB2")
-            # tab_tag_name = f"Tab.{room[0]}"
-            # self.notebook.tk.call(self.notebook._w, "addtag", tab_tag_name, "withtag", self.notebook.tabs()[-1])
-
-            # # Configure the tag to set the background color
-            # self.notebook.tk.call(self.notebook._w, "tag", "configure", tab_tag_name, background="#FFFF00")
-
+            
+            self.temp_label = tk.Label(room_frame, text="", font=('Helvetica', 24))
+            self.temp_label.pack(pady=10)
+            self.update_temp()
+            
+           
 
             counter_value = tk.IntVar(value=0)
             self.counters[room[0]] = counter_value
 
-            temperature_var = tk.StringVar(value="N/A")
-            self.temperature_vars[room[0]] = temperature_var
-            temperature_label = tk.Label(room_frame, textvariable=temperature_var)
-            temperature_label.pack(pady=5)
+            # temperature_var = tk.StringVar(value="N/A")
+            # self.temperature_vars[room[0]] = temperature_var
+            # temperature_label = tk.Label(room_frame, textvariable=temperature_var)
+            # temperature_label.pack(pady=5)
+            
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room[0]: self.update_counter(room, 1))
@@ -198,15 +239,23 @@ class App:
             #self.notebook.add(room_frame, text=f"{room[0]}")
 
         self.notebook.pack(pady=10)
-        self.update_temperature_labels()
+        
 
-         # ... existing code ...
+         
 
     # + button to add a new room
         add_button = tk.Button(self.master, text="+ Add Room", command=self.add_new_room)
         add_button.pack(pady=10)
+        add_button.configure(highlightbackground="#66AC91")
         delete_button = tk.Button(self.master, text="- Delete Room", command=self.delete_room)
         delete_button.pack(pady=10)
+        delete_button.configure(highlightbackground="#66AC91")
+
+        self.time_label = tk.Label(root, text="", font=('Helvetica', 24))
+        self.time_label.pack()
+        self.time_label.configure(highlightbackground="#66AC91")
+        self.update_time()  # Initial call to update time
+        #self.update_temp()
 
 
 
