@@ -80,7 +80,7 @@ class Household:
     #             room_data.append({
     #                 'room': room.name,
     #                 'room_temperature': room.room_temperature,
-    #                 'desired_temperature': room.desired_temperature,
+    #                 'esired_temperature': room.desired_temperature,
     #                 'scheduled_temperature': room.scheduled_desired_temp,
     #                 'schedule_start': room.schedule_start,
     #                 'radiator_setting': room.radiator_setting
