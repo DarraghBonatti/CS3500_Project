@@ -157,11 +157,11 @@ class App:
                 print(i)
 
     def update_time(self):
-        if self.counter < len(self.household._temps):
+        if self.counter < len(self.household.temps):
            # print(self.counter)
        
             #current_time = self.household.time  # Get time from household object
-            self.current_time  = self.household._temps[self.counter][0]
+            self.current_time  = self.household.temps[self.counter][0]
             #print(self.current_time)
             self.time_label.config(text=self.current_time)
             self.counter+=1
@@ -170,20 +170,28 @@ class App:
         
 
     def update_temp(self):
-            if self.tempCounter<len(self.household._temps):
-                self.room_temperature = self.household._temps[self.tempCounter][1]['room_temperature']
+        # for i in range(self.notebook.index('end')):
+        #     tab = self.notebook.nametowidget(self.notebook.tabs()[i])
+        #     self.household.temps
+            if self.tempCounter<len(self.household.temps):
+                self.room_temperature = self.household.temps[self.tempCounter][1]['room_temperature']
                 print(self.room_temperature)
                 self.tempCounter += 1
                 self.temp_label.config(text=self.room_temperature)
                 self.master.after(1000, self.update_temp)
 
-    # def update_temp(self):
-    #     for room, label in self.labels.items():
-    #         # Update the label's text with the new value
-    #         new_value = "New Value for " + room  # Replace this with the actual new value
-    #         label.config(text=new_value)
-    #     # Schedule the next update
-    #     self.after(1000, self.update_labels)  # Update every 1 second
+    # def add_to_tabs(self):
+    #     for i in range(self.notebook.index('end')):
+    #         tab = self.notebook.nametowidget(self.notebook.tabs()[i])
+    #         label = tk.Label(tab, text=" ")  # create a new label
+    #         label.pack()  # add the label to the tab
+    #     self.updateTemps()
+        
+
+
+    def update_Temp(self):
+        
+        self.after(1000, self.update_labels)  # Update every 1 second
 
 
     def show_results(self):
@@ -214,13 +222,13 @@ class App:
             label.pack(pady=10)
 
             # self.labels[room] = label
-
-            label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
-            label1.pack(pady=10)
+            self.add_to_tabs()
+            # label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
+            # label1.pack(pady=10)
             
-            self.temp_label = tk.Label(room_frame, text="", font=('Helvetica', 24))
-            self.temp_label.pack(pady=10)
-            self.update_temp()
+            # self.temp_label = tk.Label(room_frame, text="", font=('Helvetica', 24))
+            # self.temp_label.pack(pady=10)
+            # self.update_temp()
             
             counter_value = tk.IntVar(value=0)
             self.counters[room[0]] = counter_value
@@ -239,9 +247,6 @@ class App:
 
             self.notebook.add(room_frame, text=f"{room[0]}")
 
-            #self.notebook.pack()
-            #self.notebook.add(room_frame, text=f"{room[0]}")
-
         self.notebook.pack(pady=10)
         
 
@@ -259,7 +264,7 @@ class App:
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
         self.update_time()  # Initial call to update time
-        self.update_temp()
+        # self.update_temp()
 
 
 
