@@ -18,7 +18,7 @@ class Household:
     def __init__(self, name):
         self.__name: str = name
         self.__rooms: {str: Room} = {}
-        self.__sensors: {str: Sensor} = {}
+        self.__sensors: {str:Sensor} = {}
         self.__time: datetime = datetime.datetime.now()
         self._temps = []
 
@@ -87,6 +87,7 @@ class Household:
     def init_rooms_temp(self):
         self.__time = datetime.datetime.now()
         start_time = self.__time
+        
 
         while self.__time < (start_time + datetime.timedelta(days=2)):
             for room in self.__rooms.values():
@@ -105,7 +106,7 @@ class Household:
                         'radiator_setting': room.radiator_setting
                     }
                 ))
-                self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+            self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
         print(self._temps)
     # def init_boiler_temp(self):
     #     """
