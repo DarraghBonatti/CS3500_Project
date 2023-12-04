@@ -2,6 +2,7 @@ import unittest
 from household import (Household, Sensor, Room)
 from datetime import datetime, time
 
+
 class TestHousehold(unittest.TestCase):
     # def setUp(self):
     #     self.murphy_household = Household('Murphys House')

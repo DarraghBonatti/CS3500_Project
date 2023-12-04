@@ -80,7 +80,7 @@ class Household:
     #             room_data.append({
     #                 'room': room.name,
     #                 'room_temperature': room.room_temperature,
-    #                 'desired_temperature': room.desired_temperature,
+    #                 'esired_temperature': room.desired_temperature,
     #                 'scheduled_temperature': room.scheduled_desired_temp,
     #                 'schedule_start': room.schedule_start,
     #                 'radiator_setting': room.radiator_setting
@@ -92,23 +92,15 @@ class Household:
 
     def update_rooms_temp(self):
         for room in self.__rooms.values():
-            print(self.__rooms.values)
-            start_temp = random.randint(18, 23)
-            room.sensor._temperature = round(float(start_temp), 2)
-            room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))
+            if room.sensor_type == "Radiator":
+                start_temp = random.randint(18, 23)
+                room.sensor.temperature = round(float(start_temp), 2)
+                room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
+            elif room.sensor_type == "Boiler":
+                start_temp = random.randint(40, 50)
+                room.sensor.temperature = round(float(start_temp), 2)
+                room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
         self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
-
-
-    # def init_boiler_temp(self):
-    #     """
-    #     Function initializes the temperature of the boiler
-    #     """
-    #     self.__time = datetime.datetime.now()
-    #     start_time = self.__time
-    #     boiler_temp = random.randint(40, 50)
-    #     while self.__time < (start_time + datetime.timedelta(days=2)):
-    #         print(f"Boiler temperature: {boiler_temp}")
-    #         self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
 
     def delete_room(self, room_name: str):
         if room_name not in self.__rooms.keys():

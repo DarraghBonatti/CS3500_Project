@@ -109,7 +109,6 @@ class Room:
 
         rounded_temp = round(new_temp, 2)
         return rounded_temp
-    
 
     def set_temp(self, new_temp: float):
         if not isinstance(new_temp, float):
@@ -131,13 +130,11 @@ class Room:
 
         self.__sensor.temperature = round(new_temp, 2)
 
-
     def turn_radiator_on(self, delta_temp):
         if delta_temp < 4:
             self.__radiator_setting = "Low"
         else:
             self.__radiator_setting = "High"
-        #print(f"Radiator is now set to {self.__radiator_setting}.")
 
     def schedule_desired_temp(self, desired_temp: float, start_time: datetime):
         self.__scheduler_active = True
