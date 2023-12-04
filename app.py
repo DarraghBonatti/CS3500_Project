@@ -19,6 +19,7 @@ class App:
         self.counter = 0
         self.tempCounter = 0
         self.desiredtempCounter = 0
+        self.labels = {}
 
         
         self.create_widgets()
@@ -168,13 +169,21 @@ class App:
             self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
         
 
-    def update_temp_labels(self):
+    def update_temp(self):
             if self.tempCounter<len(self.household._temps):
                 self.room_temperature = self.household._temps[self.tempCounter][1]['room_temperature']
                 print(self.room_temperature)
                 self.tempCounter += 1
                 self.temp_label.config(text=self.room_temperature)
                 self.master.after(1000, self.update_temp)
+
+    # def update_temp(self):
+    #     for room, label in self.labels.items():
+    #         # Update the label's text with the new value
+    #         new_value = "New Value for " + room  # Replace this with the actual new value
+    #         label.config(text=new_value)
+    #     # Schedule the next update
+    #     self.after(1000, self.update_labels)  # Update every 1 second
 
 
     def show_results(self):
@@ -203,6 +212,9 @@ class App:
             room_frame = tk.Frame(self.notebook)
             label = tk.Label(room_frame, text=f"Room: {room[0]} - Sensor Type: {room[1]}")
             label.pack(pady=10)
+
+            # self.labels[room] = label
+
             label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
             label1.pack(pady=10)
             
@@ -247,7 +259,7 @@ class App:
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
         self.update_time()  # Initial call to update time
-        #self.update_temp()
+        self.update_temp()
 
 
 
