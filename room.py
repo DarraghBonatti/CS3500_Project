@@ -30,6 +30,14 @@ class Room:
     def sensor(self):
         return self.__sensor
     
+    # def set_desired_temperature(self, new_temperature):
+    #     # Additional validation if needed
+    #     if not isinstance(new_temperature, (int, float)):
+    #         raise TypeError("Desired temperature must be a number")
+
+    #     # Set the new desired temperature
+    #     self._desired_temperature = new_temperature
+    
     @property
     def room_temperature(self):
         return self.__sensor.temperature
@@ -115,7 +123,7 @@ class Room:
                 self.turn_radiator_on(delta_temp)
             elif abs(self.__sensor.temperature - self.__desired_temperature) < 1:
                 self.__radiator_setting = "Off"
-                print(f"Radiator is now set to {self.__radiator_setting}.")
+                #print(f"Radiator is now set to {self.__radiator_setting}.")
 
         self.__sensor.temperature = round(new_temp, 2)
 
@@ -125,7 +133,7 @@ class Room:
             self.__radiator_setting = "Low"
         else:
             self.__radiator_setting = "High"
-        print(f"Radiator is now set to {self.__radiator_setting}.")
+        #print(f"Radiator is now set to {self.__radiator_setting}.")
 
     def schedule_desired_temp(self, desired_temp: float, start_time: datetime):
         self.__scheduler_active = True

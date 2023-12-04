@@ -168,7 +168,7 @@ class App:
             self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
         
 
-    def update_temp(self):
+    def update_temp_labels(self):
             if self.tempCounter<len(self.household._temps):
                 self.room_temperature = self.household._temps[self.tempCounter][1]['room_temperature']
                 print(self.room_temperature)
@@ -210,16 +210,8 @@ class App:
             self.temp_label.pack(pady=10)
             self.update_temp()
             
-           
-
             counter_value = tk.IntVar(value=0)
             self.counters[room[0]] = counter_value
-
-            # temperature_var = tk.StringVar(value="N/A")
-            # self.temperature_vars[room[0]] = temperature_var
-            # temperature_label = tk.Label(room_frame, textvariable=temperature_var)
-            # temperature_label.pack(pady=5)
-            
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room[0]: self.update_counter(room, 1))
