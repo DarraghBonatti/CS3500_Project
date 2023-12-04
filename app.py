@@ -3,6 +3,7 @@ from household import Household
 from room import Room
 from tkinter import messagebox
 from tkinter import ttk
+import datetime
 
 
 class App:
@@ -21,6 +22,7 @@ class App:
         self.desiredtempCounter = 0
         self.labels = {}
         self.frames = []
+        
 
         
         self.create_widgets()
@@ -44,6 +46,7 @@ class App:
         self.family_name = self.family_name_entry.get()
         if self.family_name:
             self.household = Household(self.family_name)
+            self.household.time = datetime.datetime.now()
             self.label.config(text="Enter the number of rooms:")
             self.family_name_entry.destroy()
             self.submit_family_button.destroy()
@@ -163,18 +166,26 @@ class App:
        
             #current_time = self.household.time  # Get time from household object
             self.current_time  = self.household.temps[self.counter][0]
-            #print(self.current_time)
+            print(self.current_time)
             self.time_label.config(text=self.current_time)
-            self.counter+=1
+            self.counter+=self.room_count
             
             self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
         
+    def updateTemp(self):
 
-    def add_to_tabs(self):
-        print(self.frames)
-        for frame in self.frames:
-            label = tk.Label(frame, text=f'Label for Tab')
-            label.pack()
+    # def add_to_tabs(self):
+    #     print(self.frames)
+    #     for frame in self.frames:
+    #         label = tk.Label(frame, text="")
+    #         label.pack()
+
+    # def updateTemps(self):
+    #      for frame in self.frames:
+    #         self.NumOfRooms = len(self.frames)
+    #         self.temptext = 
+    #         frame.config(text=temptext)
+             
 
     
 
