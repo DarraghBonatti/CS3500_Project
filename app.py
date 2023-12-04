@@ -20,6 +20,7 @@ class App:
         self.tempCounter = 0
         self.desiredtempCounter = 0
         self.labels = {}
+        self.frames = []
 
         
         self.create_widgets()
@@ -169,31 +170,15 @@ class App:
             self.master.after(1000, self.update_time)  # Update time every 1000 ms (1 second)
         
 
-    def update_temp(self):
-        # for i in range(self.notebook.index('end')):
-        #     tab = self.notebook.nametowidget(self.notebook.tabs()[i])
-        #     self.household.temps
-            if self.tempCounter<len(self.household.temps):
-                self.room_temperature = self.household.temps[self.tempCounter][1]['room_temperature']
-                print(self.room_temperature)
-                self.tempCounter += 1
-                self.temp_label.config(text=self.room_temperature)
-                self.master.after(1000, self.update_temp)
+    def add_to_tabs(self):
+        print(self.frames)
+        for frame in self.frames:
+            label = tk.Label(frame, text=f'Label for Tab')
+            label.pack()
 
-    # def add_to_tabs(self):
-    #     for i in range(self.notebook.index('end')):
-    #         tab = self.notebook.nametowidget(self.notebook.tabs()[i])
-    #         label = tk.Label(tab, text=" ")  # create a new label
-    #         label.pack()  # add the label to the tab
-    #     self.updateTemps()
-        
+    
 
-
-    def update_Temp(self):
-        
-        self.after(1000, self.update_labels)  # Update every 1 second
-
-
+    
     def show_results(self):
 
         widgets = root.winfo_children()
@@ -218,17 +203,14 @@ class App:
         self.notebook = ttk.Notebook(self.master)
         for room in self.rooms:
             room_frame = tk.Frame(self.notebook)
+            self.frames.append(room_frame)
             label = tk.Label(room_frame, text=f"Room: {room[0]} - Sensor Type: {room[1]}")
             label.pack(pady=10)
-
-            # self.labels[room] = label
-            self.add_to_tabs()
-            # label1 = tk.Label(room_frame, text=f"Please Enter Desired Temperature")
-            # label1.pack(pady=10)
             
-            # self.temp_label = tk.Label(room_frame, text="", font=('Helvetica', 24))
-            # self.temp_label.pack(pady=10)
-            # self.update_temp()
+            # temp_label = tk.Label(room_frame, text="" ,font=('Helvetica', 24))
+            # temp_label.pack(pady=10)
+            
+           
             
             counter_value = tk.IntVar(value=0)
             self.counters[room[0]] = counter_value
@@ -248,6 +230,7 @@ class App:
             self.notebook.add(room_frame, text=f"{room[0]}")
 
         self.notebook.pack(pady=10)
+
         
 
          
@@ -264,7 +247,8 @@ class App:
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
         self.update_time()  # Initial call to update time
-        # self.update_temp()
+        self.add_to_tabs()
+        
 
 
 
