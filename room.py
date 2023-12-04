@@ -2,6 +2,7 @@ from sensor import Sensor
 import time_file as tf
 import datetime
 
+
 class Room: 
     def __init__(self, name, sensor_type: str = 'Radiator'):
         if not isinstance(name, str):
@@ -23,7 +24,7 @@ class Room:
     
     @property
     def sensor_name(self):
-        return self.__sensor._name
+        return self.__sensor.name
     
     @property
     def sensor(self):
@@ -31,15 +32,16 @@ class Room:
     
     @property
     def room_temperature(self):
-        return self.__sensor._temperature
+        return self.__sensor.temperature
     
     @room_temperature.setter
     def room_temperature(self, new_temp):
-        self.__sensor._temperature = new_temp
+        self.__sensor.temperature = new_temp
     
     @property
     def desired_temperature(self):
         return self.__desired_temperature
+
     @desired_temperature.setter
     def desired_temperature(self, new_temp):
         if not isinstance(new_temp, float):
@@ -47,10 +49,11 @@ class Room:
         self.__desired_temperature = new_temp
     
     @property
-    def _name(self):
+    def name(self):
         return self.__name
-    @_name.setter
-    def _name(self, new_name):
+
+    @name.setter
+    def name(self, new_name):
         if not isinstance(new_name, str):
             raise TypeError("Name must be a string")
         self.__name = new_name
@@ -110,11 +113,11 @@ class Room:
 
             if delta_temp >= 1:
                 self.turn_radiator_on(delta_temp)
-            elif abs(self.__sensor._temperature - self.__desired_temperature) < 1:
+            elif abs(self.__sensor.temperature - self.__desired_temperature) < 1:
                 self.__radiator_setting = "Off"
                 print(f"Radiator is now set to {self.__radiator_setting}.")
 
-        self.__sensor._temperature = round(new_temp, 2)
+        self.__sensor.temperature = round(new_temp, 2)
 
 
     def turn_radiator_on(self, delta_temp):
