@@ -105,7 +105,7 @@ class Household:
                         'radiator_setting': room.radiator_setting
                     }
                 ))
-                self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+            self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
 
     # def init_boiler_temp(self):
     #     """
