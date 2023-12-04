@@ -11,6 +11,7 @@ from room import Room
 import datetime
 import random
 import time_file as tf
+import time
 
 
 class Household:
@@ -75,10 +76,11 @@ class Household:
             start_temp = random.randint(18, 23)
             room.sensor._temperature = round(float(start_temp), 2)
 
-            while self.__time < (start_time + datetime.timedelta(days=2)):
+            while self.__time < (start_time + datetime.timedelta(days=1)):
+                #time.sleep(5)
                 room.set_temp(room.generate_temps(self.__time, room.sensor._temperature))
                 print(f"Room: {room._name} \nCurrent Time: {self.__time.strftime('%Y-%m-%d %H:%M:%S')} \nRoom temperature: {room.room_temperature:.2f} \nRadiator: {room.radiator_setting}\n")
-                self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+                self.__time = tf.accelerate_time(self.__time, acceleration_factor=1000)
 
 
     def _delete_room(self, room_name: str):
