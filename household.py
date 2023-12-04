@@ -92,6 +92,7 @@ class Household:
 
     def update_rooms_temp(self):
         for room in self.__rooms.values():
+            print(self.__rooms.values)
             start_temp = random.randint(18, 23)
             room.sensor._temperature = round(float(start_temp), 2)
             room.set_temp(room.generate_temps(room.sensor._temperature, self.__time))

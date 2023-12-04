@@ -26,6 +26,7 @@ class App:
         self.roooms = []
         self.labels = []
         self.labels2 = []
+        self.counter_value = 0
         
 
         
@@ -48,7 +49,7 @@ class App:
         
     def get_family_name(self):
         self.family_name = self.family_name_entry.get()
-        if self.family_name:
+        if self.family_name and isinstance(self.family_name, str) and 1 <= len(self.family_name) <= 20:
             self.household = Household(self.family_name)
             self.household.time = datetime.datetime.now()
             self.label.config(text="Enter the number of rooms:")
@@ -56,7 +57,7 @@ class App:
             self.submit_family_button.destroy()
             self.create_room_widgets()
         else:
-            messagebox.showerror("Error", "Please enter a family name.")
+            messagebox.showerror("Error", "Please enter a valid family name. It should be a string between 1 and 20 characters.")
 
     def create_room_widgets(self):
         self.room_count_entry = tk.Entry(self.master)
@@ -137,17 +138,23 @@ class App:
         if room in self.household.rooms:
             self.household.rooms[room].desired_temperature += 1
         print(self.household.rooms[room].desired_temperature)
+
+    def update_counter_for_schedule(self,value,room):
+            self.counter_value.set(self.counter_value.get() + value)
+            # if room in self.household.rooms:
+            #     self.household.rooms[room].desired_temperature += value
+           
          
 
   
-    def update_temperature_labels(self):
-        for room_name in self.rooms:
-            current_temp = self.household.get_room(room_name[0])
-            temp_to_show = current_temp.room_temperature
-            #print("temperature vars")
-            self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
-            #print("after method")
-            self.master.after(8000, self.update_temperature_labels)
+    # def update_temperature_labels(self):
+    #     for room_name in self.rooms:
+    #         current_temp = self.household.get_room(room_name[0])
+    #         temp_to_show = current_temp.room_temperature
+    #         #print("temperature vars")
+    #         self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
+    #         #print("after method")
+    #         self.master.after(8000, self.update_temperature_labels)
 
 
     def delete_room(self):
@@ -184,6 +191,7 @@ class App:
         self.household.update_rooms_temp()
         self.updateTempsLabels()
         self.updateTimeLabel()
+        self.updateRadOutput()
         self.master.after(5000, self.updateTemp)
         
 
@@ -194,23 +202,90 @@ class App:
             Label.pack()
 
     def add_to_tabs2(self):
-            for frame in self.frames:
-                Label = tk.Label(frame, text="")
-                self.labels.append(Label)
-                Label.pack()
+        for frame in self.frames:
+            l = tk.Label(frame, text="")
+            self.labels2.append(l)
+            l.pack()
 
     def updateTempsLabels(self):
         for counter , frame in enumerate(self.frames):
             roomToDisplay = self.roooms[counter]
             tempText = roomToDisplay.room_temperature
-            print(self.labels[counter])
+            #print(self.labels[counter])
+            print(counter)
             updateLabel = self.labels[counter]
             updateLabel.config(text=tempText)
         
-             
+    def updateRadOutput(self):
+        for counter2,room in enumerate(self.roooms):
+            outputToOutput = room.radiator_setting
+            print(counter2)
+            print(self.labels2)
+            updateLabel = self.labels2[counter2]
+            updateLabel.config(text=outputToOutput)
 
-    
+    def schedule_room(self):
+        schedule_window = tk.Toplevel(self.master)
+        schedule_window.title("Schedule Room")
 
+        # Label and variable for room selection
+        room_label = tk.Label(schedule_window, text="Select Room:")
+        room_label.pack(pady=10)
+
+ 
+
+        selected_room = tk.StringVar()
+        for room in self.rooms:
+            tk.Radiobutton(schedule_window, text=room[0], variable=selected_room, value=room[0]).pack()
+
+
+        self.counter_value = tk.IntVar(value=25)
+         # Plus button
+        plus_button = tk.Button(schedule_window, text="+", command=lambda room=room[0]: self.update_counter_for_schedule(1,room))
+        plus_button.pack(pady=5)
+        
+        # Label and variable for time selection
+        temperature_label = tk.Label(schedule_window, textvariable=self.counter_value)
+        temperature_label.pack(pady=10)
+
+        # Minus button
+        minus_button = tk.Button(schedule_window, text="-", command=lambda room=room[0]: self.update_counter_for_schedule(-1,room))
+        minus_button.pack(pady=5)
+
+
+
+        time_label = tk.Label(schedule_window, text="Select Time:")
+        time_label.pack()
+
+        selected_time = tk.IntVar()
+
+        tk.Radiobutton(schedule_window, text="30 minutes", variable=selected_time, value=30).pack()
+        tk.Radiobutton(schedule_window, text="60 minutes", variable=selected_time, value=60).pack()
+        tk.Radiobutton(schedule_window, text="2 hours", variable=selected_time, value=120).pack()
+
+        # Submit button
+        submit_button = tk.Button(schedule_window, text="Submit", command=lambda: self.submit_schedule(schedule_window, selected_room.get(), selected_time.get()))
+        submit_button.pack(pady=10)
+
+    def submit_schedule(self, schedule_window, selected_room, selected_time):
+        if selected_room and selected_time:
+            room_Obj = self.household.get_room(selected_room)
+            tempToSchedule = self.counter_value.get()
+
+            schedule_time = datetime.datetime.now() + datetime.timedelta(minutes=float(selected_time))
+
+            room_Obj.schedule_desired_temp(tempToSchedule, schedule_time)
+            print(f"Now: {datetime.datetime.now().strftime('%Y-%m-%d %H: %M: %S')}")
+            print(f"Scheduled Time: {schedule_time.strftime('%Y-%m-%d %H: %M: %S')}\n Temp: {tempToSchedule}")
+            
+            # Store the selected values (you can modify this part based on your requirements)
+            print(f"Room: {selected_room}, Time: {selected_time} minutes")
+            messagebox.showinfo("Schedule", f"Room: {selected_room}, Time: {selected_time} minutes scheduled.")
+            schedule_window.destroy()
+        else:
+            messagebox.showerror("Error", "Please select both room and time.")
+
+            
     
     def show_results(self):
 
@@ -275,15 +350,18 @@ class App:
         delete_button = tk.Button(self.master, text="- Delete Room", command=self.delete_room)
         delete_button.pack(pady=10)
         delete_button.configure(highlightbackground="#66AC91")
+        self.schedule_button = tk.Button(self.master, text="Schedule", command=self.schedule_room)
+        self.schedule_button.pack(pady=10)
+        self.schedule_button.configure(highlightbackground="#66AC91")
 
         self.time_label = tk.Label(root, text="", font=('Helvetica', 24))
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
         # self.update_time()  # Initial call to update time
         self.add_to_tabs()
+        self.add_to_tabs2()
         # self.updateTemp()
         self.updateTemp()
-        self.add_to_tabs2()
         
 
 
@@ -348,6 +426,16 @@ class App:
 
             self.notebook.add(room_frame, text=f"{room_name}")
             self.notebook.pack(pady=10)
+
+            roomObj = self.household.get_room(room_name)
+            Label = tk.Label(room_frame, text="")
+            l = tk.Label(room_frame, text="")
+            self.frames.append(room_frame)
+            self.labels.append(Label)
+            self.labels2.append(l)
+            self.roooms.append(roomObj)
+            self.updateTempsLabels()
+            self.updateRadOutput()
 
 
         
