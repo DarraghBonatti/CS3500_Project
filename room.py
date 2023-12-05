@@ -149,9 +149,9 @@ class Room:
         self.__schedule_start = None
 
     def init_room_temp(self):
-        if self.__sensor_type == "Radiator":
+        if self.__sensor.type == "Radiator":
             start_temp = random.randint(18, 23)
             self.__sensor.temperature = round(float(start_temp), 2)
-        elif self.__sensor_type == "Boiler":
-            start_temp = random.randint(30, 40)
+        elif self.__sensor.type == "Boiler":
+            start_temp = random.randint(40, 45)
             self.__sensor.temperature = round(float(start_temp), 2)

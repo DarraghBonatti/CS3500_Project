@@ -128,6 +128,7 @@ class App:
             else:
                 
                 self.show_results()
+                self.household.init_rooms_temp()
         else:
             messagebox.showerror("Error", "Please enter a valid room name between 1-20 characters.")
 
@@ -402,7 +403,10 @@ class App:
 
         if room_name and sensor_type:
             new_room_window.destroy()
+            
             self.household.add_room(room_name, sensor_type)
+            roomObj = self.household.get_room(room_name)
+            roomObj.init_room_temp()
             self.rooms.append((room_name, sensor_type))
             self.room_count += 1
 
