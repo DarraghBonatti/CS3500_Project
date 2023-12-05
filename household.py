@@ -105,7 +105,7 @@ class Household:
                 room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
             elif room.sensor_type == "Boiler":
                 room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
-        self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+        self.__time = tf.accelerate_time(self.__time, acceleration_factor=900)
 
     def delete_room(self, room_name: str):
         if room_name not in self.__rooms.keys():
