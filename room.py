@@ -54,12 +54,7 @@ class Room:
     # TODO: Make ECP for desired_temperature setter for boiler and radiator
     @desired_temperature.setter
     def desired_temperature(self, new_temp):
-        if self.__sensor.type == 'Boiler':
-            if new_temp < 30.0 or new_temp > 60.0:
-                raise ValueError("Desired temperature must be between 30 and 60 degrees")
-        else:  # sensor_type == 'Radiator':
-            if new_temp < 15.0 or new_temp > 30.0:
-                raise ValueError("Desired temperature must be between 15 and 30 degrees")
+        
         self.__desired_temperature = new_temp
     
     @property
