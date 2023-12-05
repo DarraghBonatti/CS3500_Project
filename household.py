@@ -11,11 +11,14 @@ from room import Room
 import datetime
 import random
 import time_file as tf
-import time
 
 
 class Household:
     def __init__(self, name):
+        """
+        Object to represent a household.
+        Stores the household's name, rooms, and sensors, as well as the time across the household.
+        """
         self.__name: str = name
         self.__rooms: {str: Room} = {}
         self.__sensors: {str: Sensor} = {}
@@ -73,8 +76,15 @@ class Household:
         return self.__rooms[room_name]
 
     
-
     def init_rooms_temp(self):
+        """
+        This function initialises the temperature of the rooms. 
+        This function is called at the start of the simulation when the household is created and all
+        the rooms have been added to the household.
+
+        This function simply sets the temperature of the room with a radiator to a random value between 15 and 18 degrees Celsius
+        and sets a room with a boiler to a random value between 40 and 45 degrees Celsius.
+        """
         for room in self.__rooms.values():
             if room.sensor_type == "Radiator":
                 start_temp = random.randint(15, 18)
@@ -84,6 +94,13 @@ class Household:
                 room.sensor.temperature = round(float(start_temp), 2)
 
     def update_rooms_temp(self):
+        """
+        This function updates the temperature of the rooms.
+        It is called every second by the tkinter app, and on each call generates a new time entry for each room.
+        Each room will have a new temperature generated based on the time and the previous temperature in the 
+        `generate_temps` function. This new temperature will be then processed and compared to 
+        desired temperature in the `set_temp` function. This will then be set as the current temperature of the room.
+        """
         for room in self.__rooms.values():
             if room.sensor_type == "Radiator":
                 room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
@@ -92,6 +109,9 @@ class Household:
         self.__time = tf.accelerate_time(self.__time, acceleration_factor=900)
 
     def delete_room(self, room_name: str):
+        """
+        This function deletes a room from the household.
+        """
         if room_name not in self.__rooms.keys():
             raise ValueError("Room does not exist")
         del self.__sensors[room_name]

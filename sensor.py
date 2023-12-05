@@ -26,6 +26,10 @@ class Temperature:
    
 class Sensor:
     def __init__(self, name: str, sensor_type: str = 'Radiator'):
+        """
+        Object to represent a sensor.
+        Stores the sensor's name, type, and temperature.
+        """
         self.__name = name
         self.__type = sensor_type
         self.__temperature = Temperature(0.0)

@@ -6,6 +6,10 @@ import random
 
 class Room: 
     def __init__(self, name, sensor_type: str = 'Radiator'):
+        """
+        Object to represent a room.
+        Stores the room's name, sensor, desired temperature, radiator setting, and schedule info.
+        """
         if not isinstance(name, str):
             raise TypeError("Name must be a string")
         if not isinstance(sensor_type, str):
@@ -53,7 +57,6 @@ class Room:
 
     @desired_temperature.setter
     def desired_temperature(self, new_temp):
-        
         self.__desired_temperature = new_temp
     
     @property
@@ -62,8 +65,6 @@ class Room:
 
     @name.setter
     def name(self, new_name):
-        if not isinstance(new_name, str):
-            raise TypeError("Name must be a string")
         self.__name = new_name
 
     @property
@@ -84,6 +85,17 @@ class Room:
 
     # implement generate_temps method
     def generate_temps(self, current_temp, current_time: datetime = None):
+        """
+        Function to generate temperatures for a room.
+        The temperature is calculated based on the current time and the current temperature.
+        The temperature is calculated using a sine function, and also takes into account the radiator setting.
+        Output is the room temperature rounded to 2 decimal places.
+
+        Args:
+            current_temp (float): The current temperature.
+            current_time (datetime): The current time.
+        """
+
         self.__current_time = current_time
         base_rate = 0.05
 
@@ -108,6 +120,16 @@ class Room:
         return rounded_temp
 
     def set_temp(self, new_temp: float):
+        """
+        Function to set the room temperature.
+        The temperature is set to the new temperature if the new temperature is different from the current temperature.
+        This function determines the radiator setting based on the temperature it is given 
+        and compares it to the desired temperature of the room.
+
+        Args:
+            new_temp (float): The new temperature.
+        """ 
+
         if not isinstance(new_temp, float):
             raise TypeError("New temperature must be a float")
         
@@ -127,22 +149,55 @@ class Room:
         self.__sensor.temperature = round(new_temp, 2)
 
     def turn_radiator_on(self, delta_temp):
+        """
+        Simple function to turn the radiator on.
+        The radiator setting is set to "Low" if the temperature difference is less than 4 degrees Celsius.
+        If greater than this, the radiator setting is set to "High".
+
+        Args:
+            delta_temp (float): The difference between the desired temperature and the current temperature.
+        """
         if delta_temp < 4:
             self.__radiator_setting = "Low"
         else:
             self.__radiator_setting = "High"
 
     def schedule_desired_temp(self, desired_temp: float, start_time: datetime):
+        """
+        Simple function to schedule a desired temperature.
+        The scheduled desired temperature will be set to the new desired temperature once 
+        the scheduled time is reached. This is carried out in the set_temp function.
+
+        Args:
+            desired_temp (float): The desired temperature.
+            start_time (datetime): The scheduled time.
+        """
+
         self.__scheduler_active = True
         self.__scheduled_desired_temp = desired_temp
         self.__schedule_start = start_time
 
     def cancel_schedule(self):
+        """
+        Simple function to cancel a scheduled desired temperature.
+
+        In this implementation of the system, this function is currently not in use.
+        However, in a more advanced user interface, this function could be very easily 
+        called to cancel a scheduled desired temperature.
+        """
         self.__scheduler_active = False
         self.__scheduled_desired_temp = None
         self.__schedule_start = None
 
     def init_room_temp(self):
+        """
+        This function initialises the temperature for a room.
+        This function is typically only used if this room instance was added after the household was created,
+        as these are all done together in the household method `init_rooms_temp`.
+
+        This function simply sets the temperature of the room with a radiator to a random value between 15 and 18 degrees Celsius
+        and sets a room with a boiler to a random value between 40 and 45 degrees Celsius.
+        """
         if self.__sensor.type == "Radiator":
             start_temp = random.randint(15, 18)
             self.__sensor.temperature = round(float(start_temp), 2)

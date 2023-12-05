@@ -4,19 +4,18 @@ from datetime import datetime, time
 
 
 class TestHousehold(unittest.TestCase):
-    
-
-
+    """
+    Testing suit for the Household class and overall system functionality, excluding the GUI.
+    """
     def test_add_room(self):
         household = Household("Household")
         for room in range(1, 6):
-            household._add_room(f"Room {room}", "Radiator")
-            room_instance = household._get_room(f"Room {room}")
+            household.add_room(f"Room {room}", "Radiator")
+            room_instance = household.get_room(f"Room {room}")
 
-            self.assertEqual(room_instance._name, f"Room {room}")
-            self.assertEqual(room_instance.sensor._type, "Radiator")
+            self.assertEqual(room_instance.name, f"Room {room}")
+            self.assertEqual(room_instance.sensor.type, "Radiator")
 
-            # Add assertions for other properties or methods as needed
             print(room_instance.sensor)
             print(room_instance.sensor_name)
             print(room_instance.room_temperature)
@@ -48,8 +47,6 @@ class TestHousehold(unittest.TestCase):
                   f"\nBoiler Temperature: {household.get_room('Test Boiler').room_temperature}, \n"
                   f"Desired temp: {household.get_room('Test Boiler').desired_temperature}, \n"
                   f"Radiator Setting: {household.get_room('Test Boiler').radiator_setting}, \n")
-
-        # Add assertions to check if temperatures are generated correctly
 
 
 if __name__ == '__main__':
