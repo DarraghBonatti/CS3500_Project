@@ -448,6 +448,10 @@ class App:
 
     def submit_new_room(self, new_room_window, room_name_entry, sensor_type_var):
         room_name = room_name_entry.get()
+        if len(room_name) >20 or len(room_name) <1:
+            messagebox.showerror("Please Enter valid room name between 1-20 chars.")
+
+
         sensor_type = sensor_type_var.get()
 
         if room_name and sensor_type:
