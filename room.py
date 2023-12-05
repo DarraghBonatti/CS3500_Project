@@ -103,11 +103,11 @@ class Room:
 
         if 6 <= self.__current_time.hour < 18:
             # daytime
-            print(f"Daytime | ModRate: {rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
+            #print(f"Daytime | ModRate: {rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
             new_temp = (current_temp + rate) + rad
         else:
             # nighttime
-            print(f"Nighttime | ModRate: -{rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
+            #print(f"Nighttime | ModRate: -{rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
             new_temp = (current_temp - rate) + rad
 
         rounded_temp = round(new_temp, 2)
