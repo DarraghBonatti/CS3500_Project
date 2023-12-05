@@ -51,7 +51,6 @@ class Room:
     def desired_temperature(self):
         return self.__desired_temperature
 
-    # TODO: Make ECP for desired_temperature setter for boiler and radiator
     @desired_temperature.setter
     def desired_temperature(self, new_temp):
         
