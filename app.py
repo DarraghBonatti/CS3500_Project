@@ -32,7 +32,6 @@ class App:
         
         self.create_widgets()
 
-
     def create_widgets(self):
         
         self.label = tk.Label(self.master, text="Enter your family name:")
@@ -129,16 +128,30 @@ class App:
             else:
                 
                 self.show_results()
+<<<<<<< HEAD
         else:
             messagebox.showerror("Error", "Please enter a valid room name between 1-20 characters.")
 
             
+=======
+>>>>>>> fc41e460d1c63776ae1f9e161667ff1cc49c60fa
 
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
         if room in self.household.rooms:
             self.household.rooms[room].desired_temperature += 1
         #print(self.household.rooms[room].desired_temperature)
+
+
+    def update_temperature_labels(self):
+        for room_name in self.rooms:
+            current_temp = self.household.get_room(room_name[0])
+            temp_to_show = current_temp.room_temperature
+            #print("temperature vars")
+            self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
+            #print("after method")
+            self.master.after(8000, self.update_temperature_labels)
+
 
     def update_counter_for_schedule(self,value,room):
             self.counter_value.set(self.counter_value.get() + value)
@@ -164,15 +177,18 @@ class App:
         self.time = self.household.time
         self.time_label.config(text=self.time)
 
-        
     def updateTemp(self):
 
         self.household.update_rooms_temp()
         self.updateTempsLabels()
         self.updateTimeLabel()
         self.updateRadOutput()
+<<<<<<< HEAD
         self.master.after(1000, self.updateTemp)
         
+=======
+        self.master.after(5000, self.updateTemp)
+>>>>>>> fc41e460d1c63776ae1f9e161667ff1cc49c60fa
 
     def add_to_tabs(self):
         for frame in self.frames:
@@ -198,6 +214,7 @@ class App:
             #print(counter)
             updateLabel = self.labels[counter]
             updateLabel.config(text=tempText)
+
         
     def updateRadOutput(self):
         for counter2,room in enumerate(self.roooms):
