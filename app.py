@@ -136,7 +136,7 @@ class App:
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
         if room in self.household.rooms:
-            self.household.rooms[room].desired_temperature += 1
+            self.household.rooms[room].desired_temperature += value
         #print(self.household.rooms[room].desired_temperature)
 
 
@@ -312,13 +312,18 @@ class App:
             label = tk.Label(room_frame, text=f"Room: {room[0]} - Sensor Type: {room[1]}")
             label.pack(pady=10)
             
-            # temp_label = tk.Label(room_frame, text="" ,font=('Helvetica', 24))
-            # temp_label.pack(pady=10)
             
-           
+            roomObj = self.household.get_room(room[0])
+            InitialDisplayTemp = roomObj.desired_temperature
+            print("this is the inital temp of room:",InitialDisplayTemp)
+
+
             
-            counter_value = tk.IntVar(value=25)
-            self.counters[room[0]] = counter_value
+            # counter_value = tk.IntVar(InitialDisplayTemp)
+            # self.counters[room[0]] = counter_value
+            counter_value = tk.IntVar()
+            counter_value.set(InitialDisplayTemp)
+
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room[0]: self.update_counter(room, 1))
