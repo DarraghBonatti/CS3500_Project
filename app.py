@@ -128,13 +128,10 @@ class App:
             else:
                 
                 self.show_results()
-<<<<<<< HEAD
         else:
             messagebox.showerror("Error", "Please enter a valid room name between 1-20 characters.")
 
             
-=======
->>>>>>> fc41e460d1c63776ae1f9e161667ff1cc49c60fa
 
     def update_counter(self, room, value):
         self.counters[room].set(self.counters[room].get() + value)
@@ -150,7 +147,7 @@ class App:
             #print("temperature vars")
             self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
             #print("after method")
-            self.master.after(8000, self.update_temperature_labels)
+            self.master.after(1000, self.update_temperature_labels)
 
 
     def update_counter_for_schedule(self,value,room):
@@ -164,12 +161,13 @@ class App:
         current_index = self.notebook.index(self.notebook.select())
         if current_index >= 0:
             room_name = self.rooms[current_index][0]
-            del self.rooms[current_index]
+            frame = self.frames[current_index]
+            del self.rooms[current_index], frame
             self.household.delete_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
 
             # Remove the selected tab
             self.notebook.forget(current_index)
-            rooms_value = self.household._rooms
+            rooms_value = self.household.rooms
             for i in rooms_value:
                 print(i)
 
@@ -183,12 +181,8 @@ class App:
         self.updateTempsLabels()
         self.updateTimeLabel()
         self.updateRadOutput()
-<<<<<<< HEAD
         self.master.after(1000, self.updateTemp)
         
-=======
-        self.master.after(5000, self.updateTemp)
->>>>>>> fc41e460d1c63776ae1f9e161667ff1cc49c60fa
 
     def add_to_tabs(self):
         for frame in self.frames:
