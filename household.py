@@ -100,7 +100,7 @@ class Household:
                 start_temp = random.randint(40, 50)
                 room.sensor.temperature = round(float(start_temp), 2)
                 room.set_temp(room.generate_temps(room.sensor.temperature, self.__time))
-        self.__time = tf.accelerate_time(self.__time, acceleration_factor=6000)
+        self.__time = tf.accelerate_time(self.__time, acceleration_factor=900)
 
     def delete_room(self, room_name: str):
         if room_name not in self.__rooms.keys():
