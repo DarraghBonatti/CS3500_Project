@@ -5,23 +5,13 @@ from tkinter import messagebox
 from tkinter import ttk
 import datetime
 
-
 class App:
     def __init__(self, master):
         '''
-        Brief description of the function.
-
-        More detailed description of the function, including information
-        about the parameters and return value (if applicable).
+        Initializes the App object.
 
         Parameters:
-        - param1 (type): Description of param1.
-        - param2 (type): Description of param2.
-
-        Returns:
-        type: Description of the return value (if applicable).
-
-        
+        - master (tk.Tk): The Tkinter root window.
         '''
         self.master = master
         self.master.title("Room Sensor Input")
@@ -48,6 +38,9 @@ class App:
         self.create_widgets()
 
     def create_widgets(self):
+        '''
+        Creates the main widgets for the start of the application application.
+        '''
         
         self.label = tk.Label(self.master, text="Enter your family name:")
         self.label.pack(pady=10)
@@ -62,6 +55,17 @@ class App:
         self.submit_family_button.configure(highlightbackground="#66AC91")
         
     def get_family_name(self):
+        '''
+        Retrieves and validates the family name entered by the user.
+
+        If the family name is valid, it initializes the Household object and
+        prompts the user to enter the number of rooms.
+
+        If the family name is invalid, displays an error message.
+
+        Raises:
+        - tk.messagebox.showerror: If the family name is invalid.
+        '''
         self.family_name = self.family_name_entry.get()
         if self.family_name and isinstance(self.family_name, str) and 1 <= len(self.family_name) <= 20:
             self.household = Household(self.family_name)
@@ -74,6 +78,9 @@ class App:
             messagebox.showerror("Error", "Please enter a valid family name. It should be a string between 1 and 20 characters.")
 
     def create_room_widgets(self):
+        '''
+        Creates widgets for entering the number of rooms.
+        '''
         self.room_count_entry = tk.Entry(self.master)
         self.room_count_entry.pack()
         self.room_count_entry.configure(highlightbackground="#66AC91")
@@ -83,6 +90,16 @@ class App:
         self.submit_rooms_button.configure(highlightbackground="#66AC91")
 
     def get_room_count(self):
+        '''
+        Retrieves and validates the total number of rooms entered by the user.
+
+        If the number is valid, prompts the user to enter room information.
+
+        If the number is invalid, displays an error message.
+
+        Raises:
+        - tk.messagebox.showerror: If the number of rooms is invalid.
+        '''
         try:
             self.total_rooms = int(self.room_count_entry.get())
             if self.total_rooms > 0 and self.total_rooms <9 :
@@ -96,6 +113,9 @@ class App:
             messagebox.showerror("Error", "Please enter a valid number .")
 
     def create_individual_room_widgets(self):
+        '''
+        Creates widgets for entering information about individual rooms.
+        '''
         self.room_name_label = tk.Label(self.master, text="Room Name:")
         self.room_name_label.pack()
         self.room_name_label.configure(highlightbackground="#66AC91")
@@ -128,6 +148,16 @@ class App:
         self.finish_button.configure(highlightbackground="#66AC91")
 
     def submit_room(self):
+        '''
+        
+        Submits the information about an individual room.
+
+        Adds the room to the household and updates the UI accordingly.
+
+        Raises:
+        - tk.messagebox.showerror: If the entered room information is invalid.
+        '''
+        
         room_name = self.room_name_entry.get()
         sensor_type = self.sensor_type_var.get()
 
@@ -150,6 +180,16 @@ class App:
 
 
     def update_counter(self, room, value):
+        '''
+        Updates the desired temperature of a room based on the provided value.
+
+        Parameters:
+        - room (str): The name of the room.
+        - value (int): The value to adjust the temperature.
+
+        Raises:
+        - tk.messagebox.showerror: If the desired temperature is out of range.
+        '''
         roomObj = self.household.get_room(room)
 
         new_temperature = roomObj.desired_temperature + value
@@ -169,6 +209,16 @@ class App:
 
 
     def update_counter_for_scheduler(self,room_name,value):
+        '''
+        Updates the desired temperature for scheduling purposes.
+
+        Parameters:
+        - room_name (str): The name of the room.
+        - value (int): The value to adjust the temperature.
+
+        Raises:
+        - tk.messagebox.showerror: If the desired temperature is out of range.
+        '''
         roomObj = self.household.get_room(room_name)
         scheduled_temp = roomObj.desired_temperature + value
         if roomObj.sensor_type == "Radiator":
@@ -185,6 +235,9 @@ class App:
 
 
     def update_temperature_labels(self):
+        '''
+        Updates the temperature labels for all rooms.
+        '''
         
         for room_name in self.rooms:
             current_temp = self.household.get_room(room_name[0])
@@ -193,6 +246,9 @@ class App:
             self.master.after(1000, self.update_temperature_labels)
 
     def updateDesiredTemps(self):
+        '''
+        Updates the desired temperatures based on scheduling.
+        '''
         for room in self.rooms:
             roomObj = self.household.get_room(room[0])
             print(roomObj.schedule_start)
@@ -207,6 +263,9 @@ class App:
 
 
     def delete_room(self):
+        '''
+        Deletes the currently selected room and its corresponding tab.
+        '''
         current_index = self.notebook.index(self.notebook.select())
         if current_index >= 0:
             room_name = self.rooms[current_index][0]
@@ -220,10 +279,17 @@ class App:
                 print(i)
 
     def updateTimeLabel(self):
+        '''
+        Updates the label displaying the current time.
+        '''
         self.time = self.household.time.strftime('%Y-%m-%d %H:%M:%S')
         self.time_label.config(text=self.time)
 
     def updateTemp(self):
+        '''
+        Updates the temperature-related information periodically (every 1 second).
+        Keeps UI updated with backend information.
+        '''
 
         self.household.update_rooms_temp()
         self.updateTempsLabels()
@@ -234,6 +300,11 @@ class App:
         
 
     def add_to_tabs(self):
+        """
+        Adds temperature labels to each tab frame.
+
+        Creates labels for current temperature and appends them to the labels list.
+        """
         for frame in self.frames:
             lout = tk.Label(frame, text="Current Temp:")
             lout.pack()
@@ -242,6 +313,11 @@ class App:
             Label.pack()
 
     def add_to_tabs2(self):
+        """
+        Adds radiator output labels to each tab frame.
+
+        Creates labels for radiator output and appends them to the labels2 list.
+        """
         for frame in self.frames:
             lout = tk.Label(frame, text="Radiator Output:")
             l = tk.Label(frame, text="")
@@ -250,6 +326,11 @@ class App:
             l.pack()
 
     def updateTempsLabels(self):
+        """
+        Updates the displayed room temperatures on the UI.
+
+        Retrieves room temperatures and updates corresponding labels.
+        """
         for counter , frame in enumerate(self.frames):
             roomToDisplay = self.roooms[counter]
             tempText = roomToDisplay.room_temperature
@@ -258,6 +339,11 @@ class App:
 
         
     def updateRadOutput(self):
+        """
+        Updates the displayed radiator outputs on the UI.
+
+        Retrieves radiator settings and updates corresponding labels.
+        """
         for counter2,room in enumerate(self.roooms):
             outputToOutput = room.radiator_setting
             updateLabel = self.labels2[counter2]
@@ -265,6 +351,11 @@ class App:
 
     
     def scheduling(self):
+        """
+        Opens a new window for scheduling based on the selected tab or room.
+
+        Creates a new window with options to schedule desired temperature and time.
+        """
         # This function opens a new window for scheduling based on the selected tab or room.
         current_index = self.notebook.index(self.notebook.select())
 
@@ -312,6 +403,16 @@ class App:
             submit_button.pack(pady=10)
 
     def submit_schedule(self, schedule_window, selected_room, selected_time):
+        """
+        Submits the scheduled temperature for a room.
+
+        Updates the room's desired temperature and schedules it for the specified time.
+
+        Parameters:
+        - schedule_window (tk.Toplevel): The scheduling window.
+        - selected_room (str): The name of the room to be scheduled.
+        - selected_time (int): The selected time for scheduling.
+        """
         if  selected_time:
 
             room_Obj = self.household.get_room(selected_room)
@@ -328,6 +429,11 @@ class App:
             
     
     def show_results(self):
+        """
+        Displays information about the rooms in the UI.
+
+        Creates labels and buttons for each room, allowing temperature adjustments.
+        """
 
         widgets = root.winfo_children()
 
@@ -418,6 +524,11 @@ class App:
    
 
     def add_new_room(self):
+        """
+        Opens a new window for adding a new room.
+
+        Creates a window with options to input a new room's name and sensor type.
+        """
         new_room_window = tk.Toplevel(self.master)
         new_room_window.title("Add New Room")
 
@@ -443,6 +554,15 @@ class App:
         submit_button.pack(pady=10)
 
     def submit_new_room(self, new_room_window, room_name_entry, sensor_type_var):
+
+        '''
+        Submits the information about an individual room.
+
+        Adds the room to the household object and creates labels for room in UI.
+
+        Raises:
+        - tk.messagebox.showerror: If the entered room information is invalid.
+        '''
         room_name = room_name_entry.get()
         if len(room_name) >20 or len(room_name) <1:
             messagebox.showerror("Please Enter valid room name between 1-20 chars.")
