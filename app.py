@@ -8,6 +8,21 @@ import datetime
 
 class App:
     def __init__(self, master):
+        '''
+        Brief description of the function.
+
+        More detailed description of the function, including information
+        about the parameters and return value (if applicable).
+
+        Parameters:
+        - param1 (type): Description of param1.
+        - param2 (type): Description of param2.
+
+        Returns:
+        type: Description of the return value (if applicable).
+
+        
+        '''
         self.master = master
         self.master.title("Room Sensor Input")
         self.master.configure(bg="#66AC91")
@@ -154,7 +169,6 @@ class App:
 
 
     def update_counter_for_scheduler(self,room_name,value):
-        # self.counter_value.set(self.counter_value.get()+value)
         roomObj = self.household.get_room(room_name)
         scheduled_temp = roomObj.desired_temperature + value
         if roomObj.sensor_type == "Radiator":
@@ -175,9 +189,7 @@ class App:
         for room_name in self.rooms:
             current_temp = self.household.get_room(room_name[0])
             temp_to_show = current_temp.room_temperature
-            #print("temperature vars")
             self.temperature_vars[room_name[0]].set(f"Temperature: {temp_to_show}")
-            #print("after method")
             self.master.after(1000, self.update_temperature_labels)
 
     def updateDesiredTemps(self):
@@ -200,8 +212,7 @@ class App:
             room_name = self.rooms[current_index][0]
             frame = self.frames[current_index]
             del self.rooms[current_index], frame
-            self.household.delete_room(room_name)  # You need to implement _remove_room method in your Household class if not already done
-
+            self.household.delete_room(room_name)
             # Remove the selected tab
             self.notebook.forget(current_index)
             rooms_value = self.household.rooms
@@ -242,8 +253,6 @@ class App:
         for counter , frame in enumerate(self.frames):
             roomToDisplay = self.roooms[counter]
             tempText = roomToDisplay.room_temperature
-            #print(self.labels[counter])
-            #print(counter)
             updateLabel = self.labels[counter]
             updateLabel.config(text=tempText)
 
@@ -251,15 +260,12 @@ class App:
     def updateRadOutput(self):
         for counter2,room in enumerate(self.roooms):
             outputToOutput = room.radiator_setting
-            #print(counter2)
-            #print(self.labels2)
             updateLabel = self.labels2[counter2]
             updateLabel.config(text=outputToOutput)
 
     
     def scheduling(self):
         # This function opens a new window for scheduling based on the selected tab or room.
-
         current_index = self.notebook.index(self.notebook.select())
 
         if current_index >= 0:
@@ -312,16 +318,8 @@ class App:
             tempToSchedule = self.counter_value.get()
 
             schedule_time = self.household.time + datetime.timedelta(minutes=float(selected_time))
-            # print(f"House time: {self.household.time_string}")
-            # print(f"Scheduled Time: {schedule_time} ")
-
             room_Obj.schedule_desired_temp(tempToSchedule, schedule_time)
-            # print(f"Scheduled Time: {self.household.get_room(selected_room).schedule_start} \n Scheduled temp: {self.household.get_room(selected_room).schedule_desired_temp}")
-            # print(f"Now: {datetime.datetime.now().strftime('%Y-%m-%d %H: %M: %S')}")
-            # print(f"Scheduled Time: {schedule_time.strftime('%Y-%m-%d %H: %M: %S')}\n Temp: {tempToSchedule}")
-            
-            # Store the selected values (you can modify this part based on your requirements)
-           #print(f"Room: {selected_room}, Time: {selected_time} minutes")
+           
             messagebox.showinfo("Schedule", f"Room: {selected_room}, Time: {selected_time} minutes scheduled.")
             schedule_window.destroy()
         else:
@@ -399,9 +397,6 @@ class App:
         delete_button.pack(pady=10)
         delete_button.configure(highlightbackground="#66AC91")
 
-        # delete_button = tk.Button(self.master, text="- Delete Room", command=self.delete_room)
-        # delete_button.pack(pady=10)
-        # delete_button.configure(highlightbackground="#66AC91")
 
         self.schedule_button = tk.Button(self.master, text="Schedule", command=self.scheduling)
         self.schedule_button.pack(pady=10)
@@ -411,10 +406,10 @@ class App:
         self.time_label = tk.Label(root, text="", font=('Helvetica', 24))
         self.time_label.pack()
         self.time_label.configure(highlightbackground="#66AC91")
-        # self.update_time()  # Initial call to update time
+       
         self.add_to_tabs()
         self.add_to_tabs2()
-        # self.updateTemp()
+        
         self.updateTemp()
         
 
@@ -490,7 +485,7 @@ class App:
 
             # Minus button
             minus_button = tk.Button(room_frame, text="-", command=lambda room=room_name: self.update_counter(room, -1))
-            #minus_button.pack(side=tk.LEFT, padx=5)
+            
             minus_button.pack(side=tk.LEFT, padx=5)
             
 
