@@ -51,11 +51,11 @@ class TestHousehold(unittest.TestCase):
         household.get_room("Test Room").schedule_desired_temp(desired_temp, custom_datetime)
         print(f"Scheduled desired temp {household.get_room('Test Room').scheduled_desired_temp}, Scheduled Time: {household.get_room('Test Room').schedule_start}")
 
-        desired_temp_boiler = 50.0
+        desired_temp_boiler = 60.0
         household.get_room("Test Boiler").schedule_desired_temp(desired_temp_boiler, custom_datetime)
 
         household.init_rooms_temp()
-        for i in range(30):
+        for i in range(60):
             household.update_rooms_temp()
             print(f"Time: {household.time}, \n"
                   f"Room Temperature: {household.get_room('Test Room').room_temperature}, \n"

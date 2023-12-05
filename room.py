@@ -13,7 +13,7 @@ class Room:
         self.__name = name
         self.__sensor = Sensor(name, sensor_type)
         if sensor_type == 'Boiler':
-            self.__desired_temperature = 40.0
+            self.__desired_temperature = 55.0
         else:  # sensor_type == 'Radiator':
             self.__desired_temperature = 20.0
 
@@ -90,7 +90,6 @@ class Room:
     # implement generate_temps method
     def generate_temps(self, current_temp, current_time: datetime = None):
         self.__current_time = current_time
-        print(f"current temp: {current_temp}")
         base_rate = 0.05
 
         rate = base_rate * tf.time_multiplier(self.__current_time, 0.99, 1.01)
@@ -103,11 +102,11 @@ class Room:
 
         if 6 <= self.__current_time.hour < 18:
             # daytime
-            print(f"Daytime. Rate: {rate} Rad: {rad}")
+            print(f"Daytime | ModRate: {rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
             new_temp = (current_temp + rate) + rad
         else:
             # nighttime
-            print(f"Nighttime. Rate: -{rate} Rad: {rad}")
+            print(f"Nighttime | ModRate: -{rate:.4f} Sensor: {self.__sensor.type} Rad: {rad}")
             new_temp = (current_temp - rate) + rad
 
         rounded_temp = round(new_temp, 2)
@@ -124,10 +123,10 @@ class Room:
 
         if self.__desired_temperature != new_temp:
             delta_temp = abs(self.__desired_temperature - new_temp)
-
-            if delta_temp >= 1:
-                self.turn_radiator_on(delta_temp)
-            elif abs(self.__sensor.temperature - self.__desired_temperature) < 1:
+            if self.__desired_temperature > new_temp:
+                if delta_temp >= 1:
+                    self.turn_radiator_on(delta_temp)
+            else:
                 self.__radiator_setting = "Off"
                 #print(f"Radiator is now set to {self.__radiator_setting}.")
         self.__sensor.temperature = round(new_temp, 2)

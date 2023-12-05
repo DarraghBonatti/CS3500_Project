@@ -22,7 +22,7 @@ def accelerate_time(current_time: datetime, acceleration_factor: int) -> datetim
 
 
 # Time_multiplier for temp function
-def time_multiplier(current_time: datetime, min_multiplier: float = 0.99, max_multiplier: float = 1.01) -> float:
+def time_multiplier(current_time: datetime, min_multiplier: float = 0.8, max_multiplier: float = 1.1) -> float:
     """
     Calculate a time multiplier based on the hour of the day using a sine function.
 

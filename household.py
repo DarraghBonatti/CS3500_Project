@@ -19,7 +19,10 @@ class Household:
         self.__name: str = name
         self.__rooms: {str: Room} = {}
         self.__sensors: {str: Sensor} = {}
-        self.__time: datetime = datetime.datetime.now()
+        # Set the time to 9:00 AM today
+        today = datetime.datetime.now().date()
+        desired_time: datetime = datetime.datetime(today.year, today.month, today.day, 9, 0)
+        self.__time: datetime = desired_time
 
     def __str__(self) -> str:
         return f"Household: {self.__name}, Rooms: {self.__rooms}"
