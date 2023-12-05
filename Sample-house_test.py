@@ -57,7 +57,7 @@ class TestHousehold(unittest.TestCase):
         household.init_rooms_temp()
         for i in range(60):
             household.update_rooms_temp()
-            print(f"Time: {household.time}, \n"
+            print(f"Time: {household.time_string}, \n"
                   f"Room Temperature: {household.get_room('Test Room').room_temperature}, \n"
                   f"Desired temp: {household.get_room('Test Room').desired_temperature}, \n"
                   f"Radiator Setting: {household.get_room('Test Room').radiator_setting}, \n"

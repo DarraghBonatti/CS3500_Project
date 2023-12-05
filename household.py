@@ -36,8 +36,12 @@ class Household:
         self.__name = new_name
 
     @property
-    def time(self):
+    def time_string(self):
         return self.__time.strftime('%Y-%m-%d %H:%M:%S')
+    
+    @property
+    def time(self):
+        return self.__time
 
     @time.setter
     def time(self, new_time: datetime):
