@@ -135,13 +135,37 @@ class App:
             
 
     def update_counter(self, room, value):
-        self.counters[room].set(self.counters[room].get() + value)
-        if room in self.household.rooms:
-            self.household.rooms[room].desired_temperature += value
+        roomObj = self.household.get_room(room)
+
+        new_temperature = roomObj.desired_temperature + value
+
+        if roomObj.sensor_type == "Radiator":
+            if 15 <= new_temperature <= 30:
+                self.counters[room].set(self.counters[room].get() + value)
+                roomObj.desired_temperature = new_temperature
+            else:
+                messagebox.showerror("Error", "Desired Temperature must be between 15-30°C")
+        else:
+            if 40 <= new_temperature <= 65:
+                self.counters[room].set(self.counters[room].get() + value)
+                roomObj.desired_temperature = new_temperature
+            else:
+                messagebox.showerror("Error", "Desired Temperature must be between 40-65°C")
+
+
+
+
+
+        # # if self.household.rooms[room].desired_temperature >=29:
+        # #     messagebox.showerror("Error", "Desired Temperature must be between 15-30C")
+        # self.counters[room].set(self.counters[room].get() + value)
+        # if room in self.household.rooms:
+        #     self.household.rooms[room].desired_temperature += value
         #print(self.household.rooms[room].desired_temperature)
 
 
     def update_temperature_labels(self):
+        
         for room_name in self.rooms:
             current_temp = self.household.get_room(room_name[0])
             temp_to_show = current_temp.room_temperature
@@ -152,9 +176,29 @@ class App:
 
 
     def update_counter_for_schedule(self,value,room):
-            self.counter_value.set(self.counter_value.get() + value)
+            # self.counter_value.set(self.counter_value.get() + value)
             # if room in self.household.rooms:
             #     self.household.rooms[room].desired_temperature += value
+            #     print("Incrementing",self.household.rooms[room].desired_temperature)
+        roomObj = self.household.get_room(room)
+
+        new_temperature = roomObj.desired_temperature + value
+
+        if roomObj.sensor_type == "Radiator":
+            if 15 <= new_temperature <= 30:
+                #self.counters[room].set(self.counters[room].get() + value)
+                self.counter_value.set(self.counter_value.get() + value)
+                roomObj.desired_temperature = new_temperature
+            else:
+                messagebox.showerror("Error", "Desired Temperature must be between 15-30°C")
+        else:
+            if 40 <= new_temperature <= 65:
+                #self.counters[room].set(self.counters[room].get() + value)
+                self.counter_value.set(self.counter_value.get() + value)
+                roomObj.desired_temperature = new_temperature
+            else:
+                messagebox.showerror("Error", "Desired Temperature must be between 40-65°C")
+
            
 
 
