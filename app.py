@@ -410,8 +410,17 @@ class App:
             room_frame = tk.Frame(self.notebook)
             label = tk.Label(room_frame, text=f"Room: {room_name} - Sensor Type: {sensor_type}")
             label.pack(pady=10)
-            counter_value = tk.IntVar(value=0)
+
+            roomObj = self.household.get_room(room_name)
+            InitialDisplayTemp = roomObj.desired_temperature
+            
+            counter_value = tk.IntVar()
+            counter_value.set(InitialDisplayTemp)
             self.counters[room_name] = counter_value
+
+
+
+
 
             # Plus button
             plus_button = tk.Button(room_frame, text="+", command=lambda room=room_name: self.update_counter(room, 1))
