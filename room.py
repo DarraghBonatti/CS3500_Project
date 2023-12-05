@@ -1,6 +1,7 @@
 from sensor import Sensor
 import time_file as tf
 import datetime
+import random
 
 
 class Room: 
@@ -146,3 +147,11 @@ class Room:
         self.__scheduler_active = False
         self.__scheduled_desired_temp = None
         self.__schedule_start = None
+
+    def init_room_temp(self):
+        if self.__sensor_type == "Radiator":
+            start_temp = random.randint(18, 23)
+            self.__sensor.temperature = round(float(start_temp), 2)
+        elif self.__sensor_type == "Boiler":
+            start_temp = random.randint(30, 40)
+            self.__sensor.temperature = round(float(start_temp), 2)
