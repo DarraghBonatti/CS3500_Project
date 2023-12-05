@@ -5,7 +5,6 @@ from tkinter import messagebox
 from tkinter import ttk
 import datetime
 
-
 class App:
     def __init__(self, master):
         self.master = master
