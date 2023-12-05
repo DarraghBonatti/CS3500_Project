@@ -96,7 +96,7 @@ class Household:
     def init_rooms_temp(self):
         for room in self.__rooms.values():
             if room.sensor_type == "Radiator":
-                start_temp = random.randint(18, 23)
+                start_temp = random.randint(15, 18)
                 room.sensor.temperature = round(float(start_temp), 2)
             elif room.sensor_type == "Boiler":
                 start_temp = random.randint(40, 45)
