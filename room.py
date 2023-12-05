@@ -12,7 +12,11 @@ class Room:
         
         self.__name = name
         self.__sensor = Sensor(name, sensor_type)
-        self.__desired_temperature = 25.0
+        if sensor_type == 'Boiler':
+            self.__desired_temperature = 40.0
+        else:  # sensor_type == 'Radiator':
+            self.__desired_temperature = 20.0
+
         self.__radiator_setting = "Off"
         self.__scheduler_active = False
         self.__scheduled_desired_temp = None
@@ -34,14 +38,6 @@ class Room:
     def sensor_type(self):
         return self.__sensor.type
     
-    # def set_desired_temperature(self, new_temperature):
-    #     # Additional validation if needed
-    #     if not isinstance(new_temperature, (int, float)):
-    #         raise TypeError("Desired temperature must be a number")
-
-    #     # Set the new desired temperature
-    #     self._desired_temperature = new_temperature
-    
     @property
     def room_temperature(self):
         return self.__sensor.temperature
@@ -54,10 +50,15 @@ class Room:
     def desired_temperature(self):
         return self.__desired_temperature
 
+    # TODO: Make ECP for desired_temperature setter for boiler and radiator
     @desired_temperature.setter
     def desired_temperature(self, new_temp):
-        if not isinstance(new_temp, float):
-            raise TypeError("Desired temperature must be a float")
+        if self.__sensor.type == 'Boiler':
+            if new_temp < 30.0 or new_temp > 60.0:
+                raise ValueError("Desired temperature must be between 30 and 60 degrees")
+        else:  # sensor_type == 'Radiator':
+            if new_temp < 15.0 or new_temp > 30.0:
+                raise ValueError("Desired temperature must be between 15 and 30 degrees")
         self.__desired_temperature = new_temp
     
     @property
@@ -89,23 +90,25 @@ class Room:
     # implement generate_temps method
     def generate_temps(self, current_temp, current_time: datetime = None):
         self.__current_time = current_time
-
+        print(f"current temp: {current_temp}")
         base_rate = 0.05
 
         rate = base_rate * tf.time_multiplier(self.__current_time, 0.99, 1.01)
-
         # Add the effect of the radiator
+        rad = 0.0
         if self.__radiator_setting == "Low":
-            rate += 0.125  # Low setting boosts temperature at a lower rate
+            rad = 0.5  # Low setting boosts temperature at a lower rate
         elif self.__radiator_setting == "High":
-            rate += 0.35  # High setting boosts temperature at a higher rate
+            rad = 1  # High setting boosts temperature at a higher rate
 
-        if self.__current_time.hour >= 6 and self.__current_time.hour < 18:
+        if 6 <= self.__current_time.hour < 18:
             # daytime
-            new_temp = current_temp + rate
+            print(f"Daytime. Rate: {rate} Rad: {rad}")
+            new_temp = (current_temp + rate) + rad
         else:
             # nighttime
-            new_temp = current_temp - rate
+            print(f"Nighttime. Rate: -{rate} Rad: {rad}")
+            new_temp = (current_temp - rate) + rad
 
         rounded_temp = round(new_temp, 2)
         return rounded_temp
@@ -127,7 +130,6 @@ class Room:
             elif abs(self.__sensor.temperature - self.__desired_temperature) < 1:
                 self.__radiator_setting = "Off"
                 #print(f"Radiator is now set to {self.__radiator_setting}.")
-
         self.__sensor.temperature = round(new_temp, 2)
 
     def turn_radiator_on(self, delta_temp):

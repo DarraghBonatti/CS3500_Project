@@ -41,19 +41,29 @@ class TestHousehold(unittest.TestCase):
     def test_generate_temps(self):
         household = Household("Household")
         household.add_room("Test Room", "Radiator")
-
-        # Replace these with your desired start time and temperature
+        household.add_room("Test Boiler", "Boiler")
 
         today_date = datetime.now().date()
         desired_time = time(22, 0)
         custom_datetime = datetime.combine(today_date, desired_time)
   
-        desired_temp = 30.0
+        desired_temp = 25.0
         household.get_room("Test Room").schedule_desired_temp(desired_temp, custom_datetime)
         print(f"Scheduled desired temp {household.get_room('Test Room').scheduled_desired_temp}, Scheduled Time: {household.get_room('Test Room').schedule_start}")
 
-        household.init_rooms_temp()
+        desired_temp_boiler = 50.0
+        household.get_room("Test Boiler").schedule_desired_temp(desired_temp_boiler, custom_datetime)
 
+        household.init_rooms_temp()
+        for i in range(30):
+            household.update_rooms_temp()
+            print(f"Time: {household.time}, \n"
+                  f"Room Temperature: {household.get_room('Test Room').room_temperature}, \n"
+                  f"Desired temp: {household.get_room('Test Room').desired_temperature}, \n"
+                  f"Radiator Setting: {household.get_room('Test Room').radiator_setting}, \n"
+                  f"\nBoiler Temperature: {household.get_room('Test Boiler').room_temperature}, \n"
+                  f"Desired temp: {household.get_room('Test Boiler').desired_temperature}, \n"
+                  f"Radiator Setting: {household.get_room('Test Boiler').radiator_setting}, \n")
 
         # Add assertions to check if temperatures are generated correctly
 
