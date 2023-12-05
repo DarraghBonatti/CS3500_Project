@@ -320,9 +320,10 @@ class App:
 
             
             # counter_value = tk.IntVar(InitialDisplayTemp)
-            # self.counters[room[0]] = counter_value
+            
             counter_value = tk.IntVar()
             counter_value.set(InitialDisplayTemp)
+            self.counters[room[0]] = counter_value
 
 
             # Plus button
